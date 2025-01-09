@@ -1,7 +1,7 @@
 import React from 'react';
 import {TextField, Button, Link} from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import LoginBox from "../../components/LoginBox";
+import LoginBox from "../../components/login/LoginBox";
 
 export default function Login() {
     const theme = useTheme();
