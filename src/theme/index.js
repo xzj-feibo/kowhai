@@ -8,12 +8,12 @@ export default createTheme(
         //调色板
         palette: {
             primary: {                  //主色
-                main: '#ed8714',        //主强度
-                light: '#df8620',       //轻
-                dark: '#d26c05'         //深
+                main: '#0bde4e',        //主强度
+                light: '#0df557',       //轻
+                dark: '#06c242'         //深
             },
             secondary: {                //次号色
-                main: '#cfb50a',
+                main: '#33db75',
             },
             background:{
                 paper: 'rgba(255,255,255,0.94)'
