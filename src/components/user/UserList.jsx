@@ -1,5 +1,8 @@
+/**
+ * 用户列表组件
+ */
 import React, { useEffect, useState } from "react";
-import { getUserData } from "../api/user";
+import { getUserData } from "../../api/user";
 import {
     DataGrid,
     GridActionsCellItem,
@@ -13,7 +16,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 
-const UserList = () => {
+export default function UserList() {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -261,5 +264,3 @@ const UserList = () => {
         </Paper>
     );
 }
-
-export default UserList;

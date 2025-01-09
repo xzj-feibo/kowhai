@@ -1,6 +1,6 @@
-// /**
-//  * 用户头像组件
-//  */
+ /**
+  * 用户头像组件
+  */
 import { Avatar, Box } from "@mui/material";
 import { deepOrange } from "@mui/material/colors";
 
