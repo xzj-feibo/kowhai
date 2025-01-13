@@ -4,7 +4,7 @@
 import * as React from 'react';
 import { AppProvider } from '@toolpad/core/AppProvider';
 import { SignInPage } from '@toolpad/core/SignInPage';
-import { useTheme } from '@mui/material/styles';
+import theme from "../../theme";
 
 // preview-start
 const providers = [
@@ -26,7 +26,6 @@ const signIn = async (provider) => {
 };
 
 export default function OAuthSignInPage() {
-    const theme = useTheme();
     return (
         // preview-start
         <AppProvider theme={theme}>

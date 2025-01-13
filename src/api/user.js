@@ -6,8 +6,10 @@ export const getUserData = async () => {
         const response = await axios.get("/v1/users");  // 发起 GET 请求到 '/v1/users' 端点
         return response.data.users;  // 返回响应中的数据
     } catch (error) {
-        console.error('Error fetching user data:', error);
-        throw error;  // 抛出错误以便调用者处理错误
+        if (error.response && error.response.status === 500){
+            // 如果是500错误，设置错误信息
+            alert(error.response.data.details);
+        }
     }
 };
 
@@ -17,8 +19,10 @@ export const createUser = async (userData) => {
         const response = await axios.post("/v1/user/create", userData);
         return response.data
     }catch (error) {
-        console.error('Error creating user:', error);  // 打印错误信息
-        throw error;  // 抛出错误，供调用者处理
+        if (error.response && error.response.status === 500){
+            // 如果是500错误，设置错误信息
+            alert(error.response.data.details);
+        }
     }
 }
 
@@ -28,7 +32,22 @@ export const getUserByName = async (name) => {
         const response = await axios.get("/v1/user/getbyname", {params: {name:name}});
         return response.data
     }catch (error) {
-        console.error('Error getting user by name:', error);  // 打印错误信息
-        throw error;  // 抛出错误，供调用者处理
+        if (error.response && error.response.status === 500){
+            // 如果是500错误，设置错误信息
+            alert(error.response.data.details);
+        }
+    }
+}
+
+//登录
+export const login = async (userData) => {
+    try {
+        const response = await axios.post("/v1/user/login", userData);
+        return response.data
+    }catch (error){
+        if (error.response && error.response.status === 500){
+            // 如果是500错误，设置错误信息
+            alert(error.response.data.details);
+        }
     }
 }
