@@ -9,12 +9,13 @@ import {
     GridRowEditStopReasons,
     GridRowModes, GridToolbarContainer,
 } from '@mui/x-data-grid';
-import {Box, Button, Paper} from "@mui/material";
+import {Button, Paper, ThemeProvider} from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import theme from "../../theme";
 
 export default function UserList() {
     const [users, setUsers] = useState([]);
@@ -231,36 +232,38 @@ export default function UserList() {
 
 
     return (
-        <Paper sx={{ height: 620, width: '100%', backgroundColor: 'black' }}>
-            <DataGrid
-                rows={users}
-                columns={columns}
-                initialState={{ pagination: { paginationModel } }}
-                pageSizeOptions={[5, 10]}
-                checkboxSelection
-                disableRowSelectionOnClick
-                editMode="row"
-                onRowModesModelChange={handleRowModesModelChange}
-                onRowEditStop={handleRowEditStop}
-                processRowUpdate={processRowUpdate}
-                slots={{ toolbar: EditToolbar }}
-                slotProps={{
-                    toolbar: { setUsers, setRowModesModel },
-                }}
-                sx={{
-                    border: 0,
-                    color: 'white',
-                    '& .MuiDataGrid-cell': { color: 'white' },
-                    '& .MuiDataGrid-columnHeader': { backgroundColor: '#333', color: 'white' },
-                    '& .MuiDataGrid-footerContainer': { backgroundColor: '#333', color: 'white' },
-                    '& .MuiCheckbox-root': {
-                        color: 'white', // 修改复选框的颜色
-                    },
-                    '& .MuiCheckbox-root.Mui-checked': {
-                        color: '#0bde4e', // 修改选中状态下的复选框颜色
-                    }
-                }}
-            />
-        </Paper>
+        <ThemeProvider theme={theme}>
+            <Paper sx={{ height: 620, width: '100%', backgroundColor: 'black' }}>
+                <DataGrid
+                    rows={users}
+                    columns={columns}
+                    initialState={{ pagination: { paginationModel } }}
+                    pageSizeOptions={[5, 10]}
+                    checkboxSelection
+                    disableRowSelectionOnClick
+                    editMode="row"
+                    onRowModesModelChange={handleRowModesModelChange}
+                    onRowEditStop={handleRowEditStop}
+                    processRowUpdate={processRowUpdate}
+                    slots={{ toolbar: EditToolbar }}
+                    slotProps={{
+                        toolbar: { setUsers, setRowModesModel },
+                    }}
+                    sx={{
+                        border: 0,
+                        color: 'white',
+                        '& .MuiDataGrid-cell': { color: 'white' },
+                        '& .MuiDataGrid-columnHeader': { backgroundColor: '#333', color: 'white' },
+                        '& .MuiDataGrid-footerContainer': { backgroundColor: '#333', color: 'white' },
+                        '& .MuiCheckbox-root': {
+                            color: 'white', // 修改复选框的颜色
+                        },
+                        '& .MuiCheckbox-root.Mui-checked': {
+                            color: theme.palette.primary, // 修改选中状态下的复选框颜色
+                        }
+                    }}
+                />
+            </Paper>
+        </ThemeProvider>
     );
 }

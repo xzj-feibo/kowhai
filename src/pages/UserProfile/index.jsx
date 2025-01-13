@@ -5,7 +5,7 @@ import { AppBar, Toolbar, Typography, IconButton, Avatar, Box, List, ListItem, L
 import SettingsIcon from "@mui/icons-material/Settings";
 import PersonIcon from "@mui/icons-material/Person";
 
-const UserHome = () => {
+export default function UserProfile() {
     return (
         <Box sx={{ display: "flex", height: "100vh" }}>
             {/* Navigation Drawer */}
@@ -64,5 +64,3 @@ const UserHome = () => {
         </Box>
     );
 };
-
-export default UserHome;

@@ -3,7 +3,7 @@
  */
 import {createTheme} from "@mui/material";
 
-export default createTheme(
+const theme = createTheme(
     {
         //调色板
         palette: {
@@ -28,3 +28,5 @@ export default createTheme(
         },
     }
 )
+
+export default theme;
