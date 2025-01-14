@@ -23,7 +23,7 @@ const theme = createTheme(
         },
         //排版
         typography: {
-            fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+            loginRegisterTopicFont: 'JosefinSans, sans-serif',
         },
         shape: {
             borderRadius: 8,
