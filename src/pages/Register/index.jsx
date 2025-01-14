@@ -14,7 +14,7 @@ import {
     IconButton,
     ThemeProvider,
     Box,
-    Avatar
+    Avatar, Snackbar, Alert
 } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import theme from "../../theme";
@@ -24,9 +24,15 @@ import {useNavigate} from "react-router-dom";
 import {createUser} from "../../api/user";
 
 export default function Register() {
+    //用户状态
     const [user, setUser] = useState({
         name: '', gender: '', birth: '', password: '', email: '', phone: '', avatar: ''
     });
+    //提示框相关状态
+    const [openSnackbar, setOpenSnackbar] = useState(false); // 控制 Snackbar 是否打开
+    const [snackbarMessage, setSnackbarMessage] = useState(''); // 提示框的内容
+    const [snackbarSeverity, setSnackbarSeverity] = useState('error'); // 提示框的类型（error, success, warning, info）
+
     const [activeStep, setActiveStep] = useState(0);
     const steps = ["Personal Information", "Gender & Avatar", "Birthday"];
     const navigate = useNavigate(); // 获取 navigate 函数
@@ -47,11 +53,28 @@ export default function Register() {
     }
 
     const handleRegister = async () => {
-        var flag = await createUser(user);
-        if (flag === 200) {
-            navigate('/login')
+        var data = await createUser(user);
+        if (data[0] === 200) {
+            setSnackbarMessage(data[1]);
+            setSnackbarSeverity('success');
+            setOpenSnackbar(true);
+
+            // 使用 setTimeout 延迟跳转，确保 Snackbar 显示后再跳转
+            setTimeout(() => {
+                navigate('/login');
+            }, 2000); // 2000 毫秒（即 2 秒）后跳转
+        }else{
+            // 如果注册失败，设置错误提示框
+            setSnackbarMessage(data[1]);
+            setSnackbarSeverity('error'); // 错误类型
+            setOpenSnackbar(true); // 打开提示框
         }
     }
+
+    // 关闭提示框
+    const handleCloseSnackbar = () => {
+        setOpenSnackbar(false);
+    };
 
     return (
         <ThemeProvider theme={theme}>
@@ -98,6 +121,7 @@ export default function Register() {
                         <TextField
                             id="password"
                             label="Password"
+                            type="password"
                             variant="outlined"
                             required
                             fullWidth
@@ -246,8 +270,22 @@ export default function Register() {
                         </Box>
                     </div>
                 </Slide>
-
             </RegisterBox>
+            {/* Snackbar提示框 */}
+            <Snackbar
+                open={openSnackbar}
+                autoHideDuration={6000}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}  // 顶部居中显示
+                onClose={handleCloseSnackbar}
+            >
+                <Alert
+                    onClose={handleCloseSnackbar}
+                    severity={snackbarSeverity}
+                    sx={{ width: '100%' }}
+                >
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
         </ThemeProvider>
     );
 }
