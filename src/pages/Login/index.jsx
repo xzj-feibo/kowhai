@@ -19,22 +19,33 @@ export default function Login() {
     const navigate = useNavigate(); // 获取 navigate 函数
 
     //处理登录
-    const handleLogin = async () => {
-        const data = await login(userData);
-        if (data[0] === 200){
-            setSnackbarMessage(data[1]);
-            setSnackbarSeverity('success');
-            setOpenSnackbar(true);
-
-            // 使用 setTimeout 延迟跳转，确保 Snackbar 显示后再跳转
-            setTimeout(() => {
-                navigate('/');
-            }, 2000); // 2000 毫秒（即 2 秒）后跳转
+    const handleLogin = async (event, flag) => {
+        //是否点击了登录或回车
+        let b = false;
+        if (flag === 0){
+            b = true
         }else{
-            // 如果登录失败，设置错误提示框
-            setSnackbarMessage(data[1]);
-            setSnackbarSeverity('error'); // 错误类型
-            setOpenSnackbar(true); // 打开提示框
+            if (event.key === 'Enter') {
+                b = true
+            }
+        }
+        if (b){
+            const data = await login(userData);
+            if (data[0] === 200){
+                setSnackbarMessage(data[1]);
+                setSnackbarSeverity('success');
+                setOpenSnackbar(true);
+
+                // 使用 setTimeout 延迟跳转，确保 Snackbar 显示后再跳转
+                setTimeout(() => {
+                    navigate('/');
+                }, 2000); // 2000 毫秒（即 2 秒）后跳转
+            }else{
+                // 如果登录失败，设置错误提示框
+                setSnackbarMessage(data[1]);
+                setSnackbarSeverity('error'); // 错误类型
+                setOpenSnackbar(true); // 打开提示框
+            }
         }
     }
 
@@ -42,16 +53,6 @@ export default function Login() {
     const handleCloseSnackbar = () => {
         setOpenSnackbar(false);
     };
-
-    const handleKeyDown = async (event) => {
-        if (event.key === 'Enter') { // 按下Enter时触发登录
-            const flag = await login(userData);
-            if (flag === 200) {
-                navigate('/');
-            }
-        }
-    };
-
     return (
         <ThemeProvider theme={theme}>
             <LoginBox>
@@ -64,7 +65,7 @@ export default function Login() {
                            fullWidth
                            value={username} // 绑定输入框的值
                            onChange={(e) => setUsername(e.target.value)} // 更新用户名的状态
-                           onKeyDown={handleKeyDown} // 监听键盘按下事件
+                           onKeyDown={(event) => handleLogin(event, 1)} // 监听键盘按下事件
                            sx={{
                     '& .MuiOutlinedInput-root': { // 定位到 OutlinedInput
                         '&:hover fieldset': {      // 修改悬浮时的边框颜色
@@ -82,7 +83,7 @@ export default function Login() {
                            fullWidth
                            value={password} // 绑定密码输入框的值
                            onChange={(e) => setPassword(e.target.value)} // 更新密码的状态
-                           onKeyDown={handleKeyDown} // 监听键盘按下事件
+                           onKeyDown={(event) => handleLogin(event,1)} // 监听键盘按下事件
                            sx={{
                     '& .MuiOutlinedInput-root': { // 定位到 OutlinedInput
                         '&:hover fieldset': {      // 修改悬浮时的边框颜色
@@ -103,7 +104,7 @@ export default function Login() {
                         paddingLeft: '30px',         // 调整左右内边距，使按钮内容不会太贴边
                         paddingRight: '30px',
                     }}
-                        onClick={handleLogin}
+                        onClick={(event) => handleLogin(event,0)}
                 >
                     Login
                 </Button>

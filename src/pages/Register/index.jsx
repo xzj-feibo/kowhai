@@ -21,7 +21,7 @@ import theme from "../../theme";
 import RegisterBox from "../../components/register/RegisterBox";
 import BirthdayInput from "../../components/user/BirthdayInput";
 import {useNavigate} from "react-router-dom";
-import {createUser} from "../../api/user";
+import {createUser, login} from "../../api/user";
 
 export default function Register() {
     //用户状态
@@ -52,22 +52,33 @@ export default function Register() {
         navigate('/login')
     }
 
-    const handleRegister = async () => {
-        var data = await createUser(user);
-        if (data[0] === 200) {
-            setSnackbarMessage(data[1]);
-            setSnackbarSeverity('success');
-            setOpenSnackbar(true);
-
-            // 使用 setTimeout 延迟跳转，确保 Snackbar 显示后再跳转
-            setTimeout(() => {
-                navigate('/login');
-            }, 2000); // 2000 毫秒（即 2 秒）后跳转
+    const handleRegister = async (event, flag) => {
+        //是否点击了注册或回车
+        let b = false;
+        if (flag === 0){
+            b = true
         }else{
-            // 如果注册失败，设置错误提示框
-            setSnackbarMessage(data[1]);
-            setSnackbarSeverity('error'); // 错误类型
-            setOpenSnackbar(true); // 打开提示框
+            if (event.key === 'Enter') {
+                b = true
+            }
+        }
+        if (b){
+            const data = await createUser(user);
+            if (data[0] === 200){
+                setSnackbarMessage(data[1]);
+                setSnackbarSeverity('success');
+                setOpenSnackbar(true);
+
+                // 使用 setTimeout 延迟跳转，确保 Snackbar 显示后再跳转
+                setTimeout(() => {
+                    navigate('/login');
+                }, 2000); // 2000 毫秒（即 2 秒）后跳转
+            }else{
+                // 如果登录失败，设置错误提示框
+                setSnackbarMessage(data[1]);
+                setSnackbarSeverity('error'); // 错误类型
+                setOpenSnackbar(true); // 打开提示框
+            }
         }
     }
 
@@ -255,8 +266,8 @@ export default function Register() {
                 <Slide direction="left" in={activeStep === 2} mountOnEnter unmountOnExit>
                     <div>
                         {/* Step 3: Birthday */}
-                        <FormLabel sx={{marginBottom: '26px'}}>Birthday</FormLabel>
-                        <BirthdayInput onChange={handleInputChange} onChange={(birthday) => handleInputChange({ birth: `${birthday.day}-${birthday.month}-${birthday.year}` })}/>
+                        <FormLabel sx={{marginBottom: '26px', marginTop: '100px'}}>Birthday</FormLabel>
+                        <BirthdayInput onChange={(birthday) => handleInputChange({ birth: `${birthday.day}-${birthday.month}-${birthday.year}` })} onKeyDown={(event) => {handleRegister(event, 1)}}/>
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <IconButton onClick={handleBack} sx={{ position: 'absolute', top: 16, left: 16 }}>
                                 <ArrowBackIcon />
@@ -266,7 +277,7 @@ export default function Register() {
                                 paddingLeft: '30px',
                                 paddingRight: '30px',
                                 marginTop: '90px'
-                            }} onClick={handleRegister}>Register</Button>
+                            }} onClick={(event) => handleRegister(event, 0)}>Register</Button>
                         </Box>
                     </div>
                 </Slide>
