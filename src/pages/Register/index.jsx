@@ -97,7 +97,7 @@ export default function Register() {
                     transform: 'translateX(-50%)', // 水平居中
                     zIndex: 1 // 确保它显示在其他内容的上方
                 }}>
-                    <h2>Register an account</h2>
+                    <h2 style={{fontFamily: theme.typography.loginRegisterTopicFont}}>Register an account</h2>
                 </Box>
 
                 <Stepper activeStep={activeStep} alternativeLabe sx={{marginBottom: "15px"}}>

@@ -56,7 +56,7 @@ export default function Login() {
     return (
         <ThemeProvider theme={theme}>
             <LoginBox>
-                <h2>Login to Kowhai</h2>
+                <h2 style={{fontFamily: theme.typography.loginRegisterTopicFont}}>Login to Kowhai</h2>
                 {/* 用户名输入框 */}
                 <TextField id="username"
                            label="Username"
