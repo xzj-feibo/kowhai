@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { TextField } from "@mui/material";
 
-export default function BirthdayInput({ onChange }) {
+export default function BirthdayInput({ onChange, onKeyDown }) {
     const [day, setDay] = useState("");
     const [month, setMonth] = useState("");
     const [year, setYear] = useState("");
@@ -71,6 +71,7 @@ export default function BirthdayInput({ onChange }) {
                 placeholder="YYYY"
                 style={{ width: "30%" }}
                 inputRef={yearRef}
+                onKeyDown={onKeyDown}
             />
         </div>
     );

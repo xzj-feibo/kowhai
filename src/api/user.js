@@ -17,12 +17,10 @@ export const getUserData = async () => {
 export const createUser = async (userData) => {
     try{
         const response = await axios.post("/v1/user/create", userData);
-        return response.status
+        return [response.status,response.data.message]
     }catch (error) {
         if (error.response.status !== 200){
-            // 如果是500错误，设置错误信息
-            alert(error.response.data.details);
-            return error.response.status
+            return [error.response.status, error.response.data.error]
         }
     }
 }
@@ -44,12 +42,10 @@ export const getUserByName = async (name) => {
 export const login = async (userData) => {
     try {
         const response = await axios.post("/v1/user/login", userData);
-        return response.status
+        return [response.status,response.data.message]
     }catch (error){
         if (error.response.status !== 200){
-            // 如果是500错误，设置错误信息
-            alert(error.response.data.details);
-            return error.response.status
+            return [error.response.status,error.response.data.details]
         }
     }
 }
