@@ -6,7 +6,7 @@ export const getUserData = async () => {
         const response = await axios.get("/v1/users");  // 发起 GET 请求到 '/v1/users' 端点
         return response.data.users;  // 返回响应中的数据
     } catch (error) {
-        if (error.response && error.response.status === 500){
+        if (error.response.status !== 200){
             // 如果是500错误，设置错误信息
             alert(error.response.data.details);
         }
@@ -17,11 +17,12 @@ export const getUserData = async () => {
 export const createUser = async (userData) => {
     try{
         const response = await axios.post("/v1/user/create", userData);
-        return response.data
+        return response.status
     }catch (error) {
-        if (error.response && error.response.status === 500){
+        if (error.response.status !== 200){
             // 如果是500错误，设置错误信息
             alert(error.response.data.details);
+            return error.response.status
         }
     }
 }
@@ -32,7 +33,7 @@ export const getUserByName = async (name) => {
         const response = await axios.get("/v1/user/getbyname", {params: {name:name}});
         return response.data
     }catch (error) {
-        if (error.response && error.response.status === 500){
+        if (error.response.status !== 200){
             // 如果是500错误，设置错误信息
             alert(error.response.data.details);
         }
@@ -43,11 +44,12 @@ export const getUserByName = async (name) => {
 export const login = async (userData) => {
     try {
         const response = await axios.post("/v1/user/login", userData);
-        return response.data
+        return response.status
     }catch (error){
-        if (error.response && error.response.status === 500){
+        if (error.response.status !== 200){
             // 如果是500错误，设置错误信息
             alert(error.response.data.details);
+            return error.response.status
         }
     }
 }
