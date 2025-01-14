@@ -12,8 +12,10 @@ const theme = createTheme(
                 light: '#0df557',       //轻
                 dark: '#06c242'         //深
             },
-            secondary: {                //次号色
-                main: '#33db75',
+            secondary: {
+                main: '#87CEEB',      // skyblue
+                light: '#A3D8F5',     // lighter skyblue
+                dark: '#5A9BB3'       // darker skyblue
             },
             background:{
                 paper: 'rgba(255,255,255,0.94)'
