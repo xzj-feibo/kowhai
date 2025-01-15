@@ -21,7 +21,7 @@ import theme from "../../theme";
 import RegisterBox from "../../components/register/RegisterBox";
 import BirthdayInput from "../../components/user/BirthdayInput";
 import {useNavigate} from "react-router-dom";
-import {createUser, login} from "../../api/user";
+import {createUser} from "../../api/user";
 
 export default function Register() {
     //用户状态
