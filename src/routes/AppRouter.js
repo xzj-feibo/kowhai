@@ -8,12 +8,13 @@ import UserList from "../components/user/UserList";
 import NotFound from "../pages/NotFound";
 import Register from "../pages/Register";
 import VideoDetail from "../pages/VideoDetail";
+import VideoList from "../pages/VideoList";
 
 export default function AppRouter(){
     return (
         <Router>
             <Routes>
-                <Route path="/" element={<UserList/>}/>
+                <Route path="/" element={<VideoList/>}/>
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/login3" element={<Login3/>}/>
                 <Route path="/user/:id" element={<UserProfile/>}/>
