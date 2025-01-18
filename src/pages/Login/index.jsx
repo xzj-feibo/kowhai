@@ -1,8 +1,7 @@
 import React, {useState} from 'react';
-import {TextField, Button, Snackbar, Alert} from '@mui/material';
+import {TextField, Button, Snackbar, Alert, Box} from '@mui/material';
 import {Link, useNavigate} from "react-router-dom"
 import LoginBox from "../../components/login/LoginBox";
-import {ThemeProvider} from "@mui/material";
 import theme from "../../theme";
 import {login} from "../../api/user";
 
@@ -54,7 +53,7 @@ export default function Login() {
         setOpenSnackbar(false);
     };
     return (
-        <ThemeProvider theme={theme}>
+        <Box>
             <LoginBox>
                 <h2 style={{fontFamily: theme.typography.loginRegisterTopicFont}}>Login to Kowhai</h2>
                 {/* 用户名输入框 */}
@@ -67,12 +66,12 @@ export default function Login() {
                            onChange={(e) => setUsername(e.target.value)} // 更新用户名的状态
                            onKeyDown={(event) => handleLogin(event, 1)} // 监听键盘按下事件
                            sx={{
-                    '& .MuiOutlinedInput-root': { // 定位到 OutlinedInput
-                        '&:hover fieldset': {      // 修改悬浮时的边框颜色
-                            borderColor: theme.palette.primary.light,
-                        },
-                    },
-                }}/>
+                               '& .MuiOutlinedInput-root': { // 定位到 OutlinedInput
+                                   '&:hover fieldset': {      // 修改悬浮时的边框颜色
+                                       borderColor: theme.palette.primary.light,
+                                   },
+                               },
+                           }}/>
 
                 {/* 密码输入框 */}
                 <TextField id="password"
@@ -85,25 +84,25 @@ export default function Login() {
                            onChange={(e) => setPassword(e.target.value)} // 更新密码的状态
                            onKeyDown={(event) => handleLogin(event,1)} // 监听键盘按下事件
                            sx={{
-                    '& .MuiOutlinedInput-root': { // 定位到 OutlinedInput
-                        '&:hover fieldset': {      // 修改悬浮时的边框颜色
-                            borderColor: theme.palette.primary.light,
-                        },
-                    },
-                }}/>
+                               '& .MuiOutlinedInput-root': { // 定位到 OutlinedInput
+                                   '&:hover fieldset': {      // 修改悬浮时的边框颜色
+                                       borderColor: theme.palette.primary.light,
+                                   },
+                               },
+                           }}/>
 
                 {/* 登录按钮 */}
                 <Button variant="contained"
                         color="primary"
                         fullWidth
                         sx={{
-                        height: '45px',
-                        color: 'white',
-                        '&:hover': {backgroundColor: theme.palette.primary.main},
-                        borderRadius: '50px',        // 设置圆角为50px，使按钮的左右两边为半圆
-                        paddingLeft: '30px',         // 调整左右内边距，使按钮内容不会太贴边
-                        paddingRight: '30px',
-                    }}
+                            height: '45px',
+                            color: 'white',
+                            '&:hover': {backgroundColor: theme.palette.primary.main},
+                            borderRadius: '50px',        // 设置圆角为50px，使按钮的左右两边为半圆
+                            paddingLeft: '30px',         // 调整左右内边距，使按钮内容不会太贴边
+                            paddingRight: '30px',
+                        }}
                         onClick={(event) => handleLogin(event,0)}
                 >
                     Login
@@ -117,7 +116,7 @@ export default function Login() {
                     paddingLeft: '30px',         // 调整左右内边距，使按钮内容不会太贴边
                     paddingRight: '30px',
                 }}
-                    onClick={()=>{navigate('/login3');}}>
+                        onClick={()=>{navigate('/login3');}}>
                     Login with Google
                 </Button>
 
@@ -150,6 +149,7 @@ export default function Login() {
                     {snackbarMessage}
                 </Alert>
             </Snackbar>
-        </ThemeProvider>
+        </Box>
+
     );
 }

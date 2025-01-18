@@ -12,7 +12,6 @@ import {
     StepLabel,
     Slide,
     IconButton,
-    ThemeProvider,
     Box,
     Avatar, Snackbar, Alert
 } from "@mui/material";
@@ -88,7 +87,7 @@ export default function Register() {
     };
 
     return (
-        <ThemeProvider theme={theme}>
+        <Box>
             <RegisterBox>
                 <Box sx={{
                     position: 'absolute',
@@ -297,6 +296,6 @@ export default function Register() {
                     {snackbarMessage}
                 </Alert>
             </Snackbar>
-        </ThemeProvider>
+        </Box>
     );
 }
