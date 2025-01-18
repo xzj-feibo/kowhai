@@ -233,7 +233,7 @@ export default function UserList() {
 
     return (
         <ThemeProvider theme={theme}>
-            <Paper sx={{ height: 620, width: '100%', backgroundColor: 'black' }}>
+            <Paper sx={{ height: theme.spacing(250), width: '100%', backgroundColor: 'black' }}>
                 <DataGrid
                     rows={users}
                     columns={columns}

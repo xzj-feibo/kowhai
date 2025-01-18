@@ -1,12 +1,13 @@
 import React from 'react';
+import {Box, Typography} from "@mui/material";
 
 export default function NotFound(){
     return (
-        <div>
-            <h1>
+        <Box sx={{color: 'white'}}>
+            <Typography variant='h3'>
                 404
                 NOT FOUND
-            </h1>
-        </div>
+            </Typography>
+        </Box>
     )
 }

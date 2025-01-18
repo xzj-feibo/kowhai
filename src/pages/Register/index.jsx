@@ -25,7 +25,7 @@ import {createUser} from "../../api/user";
 export default function Register() {
     //用户状态
     const [user, setUser] = useState({
-        name: '', gender: '', birth: '', password: '', email: '', phone: '', avatar: ''
+        name: '', gender: '', birth: '', password: '', email: '', phone: ''
     });
     //提示框相关状态
     const [openSnackbar, setOpenSnackbar] = useState(false); // 控制 Snackbar 是否打开
@@ -33,7 +33,7 @@ export default function Register() {
     const [snackbarSeverity, setSnackbarSeverity] = useState('error'); // 提示框的类型（error, success, warning, info）
 
     const [activeStep, setActiveStep] = useState(0);
-    const steps = ["Personal Information", "Gender & Avatar", "Birthday"];
+    const steps = ["Personal Information", "Gender", "Birthday"];
     const navigate = useNavigate(); // 获取 navigate 函数
     const handleInputChange = (newValues) => {
         setUser(prevState => ({ ...prevState, ...newValues }));
@@ -216,36 +216,6 @@ export default function Register() {
                                 <FormControlLabel value="other" control={<Radio />} label="Other" />
                             </RadioGroup>
                         </FormControl>
-
-                        {/* Avatar Upload */}
-                        <Box sx={{ marginBottom: '16px', display: 'flex', alignItems: 'center' }}>
-                            <FormControl sx={{marginRight: '100px'}}>
-                                <FormLabel>Avatar</FormLabel>
-                                <input
-                                    accept="image/*"
-                                    style={{ display: 'none' }}
-                                    id="avatar-upload"
-                                    type="file"
-                                    onChange={(e) => {
-                                        const file = e.target.files[0];
-                                        if (file) {
-                                            setUser(prevState => ({ ...prevState, avatar: URL.createObjectURL(file) }));
-                                        }
-                                    }}
-                                />
-                                <label htmlFor="avatar-upload">
-                                    <Button variant="outlined" component="span">
-                                        Upload Avatar
-                                    </Button>
-                                </label>
-                            </FormControl>
-
-                            <Avatar
-                                alt="Remy Sharp"
-                                sx={{ width: 80, height: 80 }}
-                                src={user.avatar || '/default-avatar.png'}
-                            />
-                        </Box>
 
                         {/* Navigation Buttons */}
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

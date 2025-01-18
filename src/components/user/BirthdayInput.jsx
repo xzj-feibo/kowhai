@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { TextField } from "@mui/material";
+import theme from "../../theme";
 
 export default function BirthdayInput({ onChange, onKeyDown }) {
     const [day, setDay] = useState("");
@@ -41,7 +42,7 @@ export default function BirthdayInput({ onChange, onKeyDown }) {
     };
 
     return (
-        <div style={{ display: "flex", justifyContent: "space-between", gap: "10px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", gap: theme.spacing(2.5) }}>
             <TextField
                 label="Day"
                 variant="outlined"

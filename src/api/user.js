@@ -1,4 +1,5 @@
 import axios from "axios";
+import {avatarClasses} from "@mui/material";
 
 const backAddress = process.env.REACT_APP_LOCAL_BACK_ADDRESS
 // 获取用户数据
@@ -50,3 +51,24 @@ export const login = async (userData) => {
         }
     }
 }
+
+//上传用户头像
+export const uploadAvatar = async (id, file) => {
+    if (!file) {
+        throw new Error('No file provided for upload');
+    }
+    var formData = new FormData();
+    formData.append('id', id);
+    formData.append('avatar', file);
+    try {
+        const response = await axios.patch(`${backAddress}/user/avatar`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data', // 指定上传类型
+            },
+        });
+        return response.data; // 返回响应数据
+    } catch (error) {
+        console.error('Error uploading avatar:', error);
+        throw error; // 如果发生错误抛出
+    }
+};
