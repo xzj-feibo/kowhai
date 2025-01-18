@@ -10,12 +10,12 @@ const RegisterBox = styled(Box)(({theme})=>({
     justifyContent: 'center', // 垂直居中
     alignItems: 'center',    // 水平居中
     height: '60vh',         // 父容器高度
-    padding: '20px',        //内边距
-    gap: '16px',             // 子元素之间的间距
+    padding: theme.spacing(5),        //内边距
+    gap: theme.spacing(4),             // 子元素之间的间距
     backgroundColor: theme.palette.background.paper, // 背景颜色
     width: '40%',           // 容器宽度
-    maxWidth: '500px',       // 限制最大宽度
+    maxWidth: theme.spacing(125),       // 限制最大宽度
     margin: '0 auto',        // 水平居中
-    borderRadius: '10px'     //圆角
+    borderRadius: theme.spacing(2.5)     //圆角
 }));
 export default RegisterBox

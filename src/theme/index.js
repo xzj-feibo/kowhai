@@ -25,6 +25,8 @@ const theme = createTheme(
         typography: {
             loginRegisterTopicFont: 'JosefinSans, sans-serif',
         },
+        //间距
+        spacing: 4,
         shape: {
             borderRadius: 8,
         },
