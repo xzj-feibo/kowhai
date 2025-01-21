@@ -5,15 +5,13 @@ import {
     FormLabel,
     Radio,
     RadioGroup,
-    TextField,
-    Button,
     Stepper,
     Step,
     StepLabel,
     Slide,
     IconButton,
     Box,
-    Avatar, Snackbar, Alert
+    Snackbar, Alert
 } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import theme from "../../theme";
@@ -21,7 +19,10 @@ import RegisterBox from "../../components/register/RegisterBox";
 import BirthdayInput from "../../components/user/BirthdayInput";
 import {useNavigate} from "react-router-dom";
 import {createUser} from "../../api/user";
+import {StyledButton, StyledTextField, TitleBox} from "./registerStyles";
+import * as PropTypes from "prop-types";
 
+TitleBox.propTypes = {children: PropTypes.node};
 export default function Register() {
     //用户状态
     const [user, setUser] = useState({
@@ -89,15 +90,9 @@ export default function Register() {
     return (
         <Box>
             <RegisterBox>
-                <Box sx={{
-                    position: 'absolute',
-                    top: '40px', // 距离顶部20px，根据需要调整
-                    left: '50%',
-                    transform: 'translateX(-50%)', // 水平居中
-                    zIndex: 1 // 确保它显示在其他内容的上方
-                }}>
+                <TitleBox>
                     <h2 style={{fontFamily: theme.typography.loginRegisterTopicFont}}>Register an account</h2>
-                </Box>
+                </TitleBox>
 
                 <Stepper activeStep={activeStep} alternativeLabe sx={{marginBottom: "15px"}}>
                     {steps.map((label) => (
@@ -111,25 +106,15 @@ export default function Register() {
                 <Slide direction="left" in={activeStep === 0} mountOnEnter unmountOnExit>
                     <div>
                         {/* Step 1: Personal Information */}
-                        <TextField
-                            id="name"
+                        <StyledTextField id="name"
                             label="Name"
                             variant="outlined"
                             required
                             fullWidth
                             value={user.name}
                             onChange={(e) => setUser(prevState => ({ ...prevState, name: e.target.value }))}
-                            sx={{
-                                '& .MuiOutlinedInput-root': {
-                                    '&:hover fieldset': {
-                                        borderColor: theme.palette.primary.light,
-                                    },
-                                },
-                                marginBottom: '16px'
-                            }}
                         />
-                        <TextField
-                            id="password"
+                        <StyledTextField id="password"
                             label="Password"
                             type="password"
                             variant="outlined"
@@ -137,64 +122,31 @@ export default function Register() {
                             fullWidth
                             value={user.password}
                             onChange={(e) => setUser(prevState => ({ ...prevState, password: e.target.value }))}
-                            sx={{
-                                '& .MuiOutlinedInput-root': {
-                                    '&:hover fieldset': {
-                                        borderColor: theme.palette.primary.light,
-                                    },
-                                },
-                                marginBottom: '16px'
-                            }}
                         />
-                        <TextField
-                            id="email"
+                        <StyledTextField id="email"
                             label="Email"
                             variant="outlined"
                             required
                             fullWidth
                             value={user.email}
                             onChange={(e) => setUser(prevState => ({ ...prevState, email: e.target.value }))}
-                            sx={{
-                                '& .MuiOutlinedInput-root': {
-                                    '&:hover fieldset': {
-                                        borderColor: theme.palette.primary.light,
-                                    },
-                                },
-                                marginBottom: '16px'
-                            }}
                         />
-                        <TextField
-                            id="phone"
+                        <StyledTextField id="phone"
                             label="Phone"
                             variant="outlined"
                             required
                             fullWidth
                             value={user.phone}
                             onChange={(e) => setUser(prevState => ({ ...prevState, phone: e.target.value }))}
-                            sx={{
-                                '& .MuiOutlinedInput-root': {
-                                    '&:hover fieldset': {
-                                        borderColor: theme.palette.primary.light,
-                                    },
-                                },
-                                marginBottom: '16px'
-                            }}
                         />
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <Button variant="contained" onClick={handleNext} sx={{
-                                borderRadius: '50px',        // 设置圆角为50px，使按钮的左右两边为半圆
-                                paddingLeft: '30px',         // 调整左右内边距，使按钮内容不会太贴边
-                                paddingRight: '30px',
-                                marginTop: '40px',
+                            <StyledButton variant="contained" onClick={handleNext} sx={{
                                 marginRight: '50px'
-                            }}>Next</Button>
+                            }}>Next</StyledButton>
 
-                            <Button variant="contained" sx={{
-                                borderRadius: '50px',
-                                paddingLeft: '30px',
-                                paddingRight: '30px',
+                            <StyledButton variant="contained" sx={{
                                 marginTop: '40px'
-                            }} onClick={handleBackToLogin}>Back to Login</Button>
+                            }} onClick={handleBackToLogin}>Back to Login</StyledButton>
                         </Box>
                     </div>
                 </Slide>
@@ -222,12 +174,9 @@ export default function Register() {
                             <IconButton onClick={handleBack} sx={{ position: 'absolute', top: 16, left: 16 }}>
                                 <ArrowBackIcon />
                             </IconButton>
-                            <Button variant="contained" onClick={handleNext} sx={{
-                                borderRadius: '50px',        // 设置圆角为50px，使按钮的左右两边为半圆
-                                paddingLeft: '30px',         // 调整左右内边距，使按钮内容不会太贴边
-                                paddingRight: '30px',
+                            <StyledButton variant="contained" onClick={handleNext} sx={{
                                 marginTop: '100px'
-                            }}>Next</Button>
+                            }}>Next</StyledButton>
                         </Box>
                     </div>
                 </Slide>
@@ -241,12 +190,9 @@ export default function Register() {
                             <IconButton onClick={handleBack} sx={{ position: 'absolute', top: 16, left: 16 }}>
                                 <ArrowBackIcon />
                             </IconButton>
-                            <Button variant="contained" sx={{
-                                borderRadius: '50px',
-                                paddingLeft: '30px',
-                                paddingRight: '30px',
+                            <StyledButton variant="contained" sx={{
                                 marginTop: '90px'
-                            }} onClick={(event) => handleRegister(event, 0)}>Register</Button>
+                            }} onClick={(event) => handleRegister(event, 0)}>Register</StyledButton>
                         </Box>
                     </div>
                 </Slide>

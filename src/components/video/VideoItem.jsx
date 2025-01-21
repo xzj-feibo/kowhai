@@ -6,18 +6,19 @@ import { formatDistanceToNow } from 'date-fns';
 import Hls from 'hls.js';
 
 const VideoItem = ({ video }) => {
-    const { name, image, link, id, createTime } = video;
+    const { name, image, link, id, audit } = video;
     const [isHovered, setIsHovered] = useState(false);
     const navigate = useNavigate();
     const videoRef = useRef(null); // Reference to video element
     const hlsRef = useRef(null); // Reference to HLS instance
     const isPlayingRef = useRef(false); // Track whether the video is playing
 
-    const timeAgo = formatDistanceToNow(new Date(createTime), { addSuffix: true });
+    // const timeAgo = formatDistanceToNow(new Date(audit.createTime), { addSuffix: true });
 
     const handlePlayClick = (e) => {
         e.stopPropagation();
-        navigate(`/video/detail/${id}`);
+        // 使用查询参数将视频链接传递给 VideoDetail 页面
+        navigate(`/video/detail/${id}?src=${encodeURIComponent(link)}`);
     };
 
     useEffect(() => {
@@ -122,9 +123,9 @@ const VideoItem = ({ video }) => {
                     {/*<Typography variant="body2" sx={{ marginLeft: 1, color: 'gray' }}>*/}
                     {/*    {channel.name}*/}
                     {/*</Typography>*/}
-                    <Typography variant="body2" sx={{ marginLeft: 2, color: 'gray' }}>
-                        {timeAgo}
-                    </Typography>
+                    {/*<Typography variant="body2" sx={{ marginLeft: 2, color: 'gray' }}>*/}
+                    {/*    {timeAgo}*/}
+                    {/*</Typography>*/}
                 </Box>
 
                 {/*<Typography variant="body2" sx={{ color: 'gray', marginTop: 0.5 }}>*/}

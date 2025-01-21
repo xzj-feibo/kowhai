@@ -1,10 +1,14 @@
 import VideoPlayer from "../../components/video/VideoPlayer";
 import React from "react";
+import {useLocation} from "react-router-dom";
 
 export default function VideoDetail() {
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const videoSrc = queryParams.get('src');
     return (
         <VideoPlayer
-            src="http://119.45.154.194:9000/video/1/send/send.m3u8"
+            src={videoSrc}
         />
     )
 }

@@ -1,12 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Hls from 'hls.js';
-import { Box, Paper, IconButton, Slider } from '@mui/material';
+import {Box, Paper, IconButton, Slider, styled} from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import {VolumeOff, VolumeUp, PictureInPictureAlt} from "@mui/icons-material";
-import theme from "../../theme";
+import {
+    Dot, FullScreenBox, InProcessBar, LoadedProcess,
+    PIPBox, PlayingBox, Process, ProcessBar,
+    StyledVideo, VolumeBox, VolumeSlider,
+} from './js/VideoPlayerStyles'
 
 const VideoPlayer = ({ src }) => {
     const videoRef = useRef(null);
@@ -46,7 +50,7 @@ const VideoPlayer = ({ src }) => {
                 setLoadedProgress((bufferedEnd / duration) * 100);
             }
         };
-
+        handleProgress()
         const handleTimeUpdate = () => {
             //获取当前播放时间
             const currentTime = videoElement.currentTime;
@@ -56,11 +60,11 @@ const VideoPlayer = ({ src }) => {
                 setProgress((currentTime / duration) * 100);
             }
         };
-
+        handleTimeUpdate()
         const handleFullscreenChange = () => {
             setIsFullscreen(!!document.fullscreenElement);
         };
-
+        handleFullscreenChange()
         document.addEventListener('fullscreenchange', handleFullscreenChange);
 
         //返回值是清理函数，当组件卸载或src变化时执行
@@ -202,8 +206,7 @@ const VideoPlayer = ({ src }) => {
                     ...(isMiniMode ? miniModeStyles : {}),
                 }}
             >
-                <Box
-                    sx={{
+                <Box sx={{
                         position: 'relative',
                         paddingBottom: '56.25%',
                         height: 0,
@@ -211,160 +214,63 @@ const VideoPlayer = ({ src }) => {
                         ...(isMiniMode && { paddingBottom: '0', height: '100%' }),
                     }}
                     onMouseEnter={handleMouseEnterVideo}
-                    onMouseLeave={handleMouseLeaveVideo}
-                >
-                    <video
+                    onMouseLeave={handleMouseLeaveVideo}>
+
+                    <StyledVideo
                         ref={videoRef}
                         controls={false}
-                        style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            width: '100%',
-                            height: '100%',
-                            borderRadius: '25px',
-                            zIndex: 1,
-                            cursor: 'pointer',
-                        }}
                         onClick={handleVideoClick}
                     />
                     {showControls && (
                         <>
-                            <Box
-                                onClick={handleProgressBarClick}
-                                onMouseEnter={handleMouseEnterProgressBar}
-                                onMouseLeave={handleMouseLeaveProgressBar}
-                                sx={{
-                                    position: 'absolute',
-                                    bottom: '70px',
-                                    left: '50%',
-                                    width: progressBarWidth,
-                                    height: '15px',
-                                    backgroundColor: 'transparent',
-                                    borderRadius: '3px',
-                                    zIndex: 3,
-                                    cursor: 'pointer',
-                                    transform: 'translateX(-50%)',
-                                    transition: 'width 0.3s ease-in-out',
-                                }}
-                            >
-                                <Box
-                                    sx={{
-                                        width: '100%',
-                                        height: progressBarHeight,
-                                        backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                                        position: 'absolute',
-                                        top: '5px',
-                                    }}
-                                >
-                                    <Box
-                                        sx={{
-                                            width: `${loadedProgress}%`,
-                                            height: '100%',
-                                            backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                                        }}
-                                    />
-                                    <Box
-                                        sx={{
-                                            width: `${progress}%`,
-                                            height: '100%',
-                                            backgroundColor: theme.palette.primary.main,
-                                            position: 'absolute',
-                                            top: 0,
-                                            left: 0,
-                                        }}
-                                    />
-                                    {/*进度条圆点*/}
-                                    <Box
-                                        sx={{
-                                            position: 'absolute',
-                                            top: '-5px',
-                                            left: `${progress}%`,
-                                            width: '12px',
-                                            height: '12px',
-                                            backgroundColor: theme.palette.primary.main,
-                                            borderRadius: '50%',
-                                            transform: 'translateX(-50%)',
-                                            zIndex: 4,
-                                        }}
-                                    />
-                                </Box>
-                            </Box>
+                            <ProcessBar onClick={handleProgressBarClick}
+                                        onMouseEnter={handleMouseEnterProgressBar}
+                                        onMouseLeave={handleMouseLeaveProgressBar}
+                                        progressBarWidth={progressBarWidth}>
 
-                            <Box
-                                sx={{
-                                    position: 'absolute',
-                                    bottom: '15px',
-                                    left: '12px',
-                                    zIndex: 4,
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                }}
-                            >
+                                <InProcessBar progressBarHeight={progressBarHeight}>
+                                    <LoadedProcess loadedProgress={loadedProgress}/>
+                                    <Process progress={progress}/>
+                                    {/*进度条圆点*/}
+                                    <Dot/>
+                                </InProcessBar>
+                            </ProcessBar>
+
+                            <PlayingBox>
                                 <IconButton onClick={togglePlayPause} sx={{ color: 'white' }}>
                                     {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
                                 </IconButton>
 
-                                <Box
+                                <VolumeBox sliderWidth={sliderWidth}
                                     onMouseEnter={handleMouseEnterVolume}
-                                    onMouseLeave={handleMouseLeaveVolume}
-                                    sx={{
-                                        position: 'relative',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        transition: 'width 0.3s ease',
-                                        width: `${sliderWidth}px`,
-                                    }}
-                                >
+                                    onMouseLeave={handleMouseLeaveVolume}>
+
                                     <IconButton onClick={toggleMute} sx={{ color: 'white' }}>
                                         {isMuted ? <VolumeOff /> : <VolumeUp />}
                                     </IconButton>
                                     {showVolumeSlider && (
-                                        <Slider
+                                        <VolumeSlider
                                             value={volume}
                                             min={0}
                                             max={1}
                                             step={0.01}
                                             onChange={handleVolumeChange}
-                                            sx={{
-                                                width: '150px',
-                                                color: theme.palette.primary.main,
-                                                height: '2px',
-                                                '& .MuiSlider-thumb': {
-                                                    width: 12,
-                                                    height: 12,
-                                                },
-                                            }}
                                         />
                                     )}
-                                </Box>
-                            </Box>
+                                </VolumeBox>
+                            </PlayingBox>
 
-                            <Box
-                                sx={{
-                                    position: 'absolute',
-                                    bottom: '15px',
-                                    right: '60px',
-                                    zIndex: 4,
-                                }}
-                            >
+                            <FullScreenBox>
                                 <IconButton onClick={toggleFullscreen} sx={{ color: 'white' }}>
                                     {isFullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
                                 </IconButton>
-                            </Box>
+                            </FullScreenBox>
 
-                            <Box
-                                sx={{
-                                    position: 'absolute',
-                                    bottom: '15px',
-                                    right: '20px',
-                                    zIndex: 4,
-                                }}
-                            >
+                            <PIPBox>
                                 <IconButton onClick={toggleMiniMode} sx={{ color: 'white' }}>
                                     <PictureInPictureAlt />
                                 </IconButton>
-                            </Box>
+                            </PIPBox>
                         </>
                     )}
                 </Box>
