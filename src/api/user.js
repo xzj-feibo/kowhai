@@ -1,5 +1,18 @@
 import axios from "axios";
-import {avatarClasses} from "@mui/material";
+
+// 设置全局请求拦截器
+axios.interceptors.request.use(
+    config => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            config.headers['Authorization'] = token; // 设置 Authorization 头部
+        }
+        return config;
+    },
+    error => {
+        return Promise.reject(error);
+    }
+);
 
 const backAddress = process.env.REACT_APP_LOCAL_BACK_ADDRESS
 // 获取用户数据
@@ -18,7 +31,7 @@ export const getUserData = async () => {
 //创建用户
 export const createUser = async (userData) => {
     try{
-        const response = await axios.post(`${backAddress}/v1/user/create`, userData);
+        const response = await axios.post(`${backAddress}/user/create`, userData);
         return [response.status,response.data.message]
     }catch (error) {
         if (error.response.status !== 200){
@@ -43,8 +56,9 @@ export const getUserByName = async (name) => {
 //登录
 export const login = async (userData) => {
     try {
-        const response = await axios.post(`${backAddress}/v1/user/login`, userData);
-        return [response.status,response.data.message]
+        const response = await axios.post(`${backAddress}/user/login`, userData);
+        var token = "Bearer " + response.data.token;
+        return [response.status,response.data.message,token]
     }catch (error){
         if (error.response.status !== 200){
             return [error.response.status,error.response.data.details]

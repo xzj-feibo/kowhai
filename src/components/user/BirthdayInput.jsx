@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { TextField } from "@mui/material";
+import {styled, TextField} from "@mui/material";
 import theme from "../../theme";
 
 export default function BirthdayInput({ onChange, onKeyDown }) {
@@ -43,37 +43,39 @@ export default function BirthdayInput({ onChange, onKeyDown }) {
 
     return (
         <div style={{ display: "flex", justifyContent: "space-between", gap: theme.spacing(2.5) }}>
-            <TextField
+            <StyledTextField
                 label="Day"
                 variant="outlined"
                 value={day}
                 onChange={handleDayChange}
                 inputProps={{ maxLength: 2 }}
                 placeholder="DD"
-                style={{ width: "30%" }}
                 inputRef={dayRef}
             />
-            <TextField
+            <StyledTextField
                 label="Month"
                 variant="outlined"
                 value={month}
                 onChange={handleMonthChange}
                 inputProps={{ maxLength: 2 }}
                 placeholder="MM"
-                style={{ width: "30%" }}
                 inputRef={monthRef}
             />
-            <TextField
+            <StyledTextField
                 label="Year"
                 variant="outlined"
                 value={year}
                 onChange={handleYearChange}
                 inputProps={{ maxLength: 4 }}
                 placeholder="YYYY"
-                style={{ width: "30%" }}
                 inputRef={yearRef}
                 onKeyDown={onKeyDown}
             />
         </div>
     );
 }
+
+//样式
+const StyledTextField = styled(TextField)`
+    width: 30%
+`

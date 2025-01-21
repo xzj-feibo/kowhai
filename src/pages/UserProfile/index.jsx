@@ -69,7 +69,7 @@ export default function UserProfile() {
                             User Home
                         </Typography>
                         <IconButton edge="end" color="inherit">
-                            <UserAvatar src="https://image-10001577.image.myqcloud.com/upload/3/20170412/1492007452202.jpg" avatarSize={60} size={78}/>
+                            <UserAvatar src="https://image-10001577.image.myqcloud.com/upload/3/20170412/1492007452202.jpg" avatarSize={54} size={70}/>
                         </IconButton>
                     </Toolbar>
                 </AppBar>
