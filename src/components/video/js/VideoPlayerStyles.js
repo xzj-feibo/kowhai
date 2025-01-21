@@ -34,13 +34,13 @@ export const InProcessBar = styled(Box)(({progressBarHeight}) => ({
     top: '5px'
 }))
 
-export const LoadedProcess = styled(Box)(({loadedProgress}) => ({
+export const LoadedProgress = styled(Box)(({loadedProgress}) => ({
     width: `${loadedProgress}%`,
     height: '100%',
     backgroundColor: 'rgba(255, 255, 255, 0.5)'
 }))
 
-export const Process = styled(Box)(({progress}) => ({
+export const Progress = styled(Box)(({progress}) => ({
     width: `${progress}%`,
     height: '100%',
     backgroundColor: theme.palette.primary.main,
