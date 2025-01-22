@@ -15,7 +15,7 @@ export default function Login() {
     const [snackbarMessage, setSnackbarMessage] = useState(''); // 提示框的内容
     const [snackbarSeverity, setSnackbarSeverity] = useState('error'); // 提示框的类型（error, success, warning, info）
     // 构造 userData 对象
-    const userData = { name: username, password: password };
+    const userData = { user_name: username, password: password };
     const navigate = useNavigate(); // 获取 navigate 函数
 
     //处理登录

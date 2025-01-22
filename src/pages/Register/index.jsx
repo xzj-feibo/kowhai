@@ -26,7 +26,7 @@ TitleBox.propTypes = {children: PropTypes.node};
 export default function Register() {
     //用户状态
     const [user, setUser] = useState({
-        name: '', gender: '', birth: '', password: '', email: '', phone: ''
+        user_name: '', gender: '', birth: '', password: '', email: '', phone: ''
     });
     //提示框相关状态
     const [openSnackbar, setOpenSnackbar] = useState(false); // 控制 Snackbar 是否打开
@@ -111,7 +111,7 @@ export default function Register() {
                             variant="outlined"
                             required
                             fullWidth
-                            value={user.name}
+                            value={user.user_name}
                             onChange={(e) => setUser(prevState => ({ ...prevState, name: e.target.value }))}
                         />
                         <StyledTextField id="password"
