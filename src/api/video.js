@@ -16,14 +16,15 @@ axios.interceptors.request.use(
 
 const backAddress = process.env.REACT_APP_LOCAL_BACK_ADDRESS;
 
-export const uploadVideo = async (userId, videoName, videoDuration, videoFile) => {
+export const uploadVideo = async (userId, videoName, videoDuration, imgFile, videoFile) => {
     const formData = new FormData();
 
     // 将各个字段添加到 FormData
     formData.append('userId', userId);
     formData.append('videoName', videoName);
     formData.append('videoDuration', videoDuration);
-    formData.append('video', videoFile);  // 这是文件
+    formData.append('video', videoFile);  // 这是视频文件
+    formData.append('image', imgFile);  // 这是封面文件
 
     try {
         const response = await axios.post(`${backAddress}/v1/video/upload`, formData, {
