@@ -2,18 +2,21 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Box, Typography, Paper, IconButton, Avatar, Tooltip } from '@mui/material';
 import { PlayArrow } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { formatDistanceToNow } from 'date-fns';
+import {formatDistanceToNow, parseISO} from 'date-fns';
 import Hls from 'hls.js';
+import UserAvatar from "../user/UserAvatar";
 
 const VideoItem = ({ video }) => {
-    const { name, image, link, id, audit } = video;
+    const { name, image, link, id, createTime, user_name } = video;
     const [isHovered, setIsHovered] = useState(false);
     const navigate = useNavigate();
     const videoRef = useRef(null); // Reference to video element
     const hlsRef = useRef(null); // Reference to HLS instance
     const isPlayingRef = useRef(false); // Track whether the video is playing
 
-    // const timeAgo = formatDistanceToNow(new Date(audit.createTime), { addSuffix: true });
+    const parsedTime = parseISO(createTime); // 解析日期
+    const timeAgo = formatDistanceToNow(parsedTime, { addSuffix: true });
+
 
     const handlePlayClick = (e) => {
         e.stopPropagation();
@@ -59,80 +62,86 @@ const VideoItem = ({ video }) => {
     }, [isHovered, link]); // Dependency array to react to hover state and link
 
     return (
-        <Paper
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                cursor: 'pointer',
-                borderRadius: 2,
-                boxShadow: 2,
-                position: 'relative',
-                width: 360,
-                height: 250,
-            }}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            onClick={() => navigate(`/video/${id}`)}
-        >
-            <Box sx={{ position: 'relative', width: 360, height: 250 }}>
-                {isHovered ? (
-                    <video
-                        ref={videoRef}
-                        width="100%"
-                        autoPlay
-                        muted
-                        loop
-                        style={{ borderRadius: '8px' }}
-                    >
-                        Your browser does not support the video tag.
-                    </video>
-                ) : (
-                    <img
-                        src={image}
-                        alt={name}
-                        style={{ width: '100%', height: 'auto', borderRadius: '8px' }}
-                    />
-                )}
-
-                {isHovered && (
-                    <Tooltip title="播放" placement="top" arrow>
-                        <IconButton
-                            onClick={handlePlayClick}
-                            sx={{
-                                position: 'absolute',
-                                top: '50%',
-                                left: '50%',
-                                transform: 'translate(-50%, -50%)',
-                                backgroundColor: 'rgba(0, 0, 0, 0.4)',
-                                padding: 1,
-                            }}
+        <Box>
+            <Paper
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    cursor: 'pointer',
+                    borderRadius: '10px',
+                    boxShadow: 2,
+                    position: 'relative',
+                    width: 360,
+                    height: 220,
+                }}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                onClick={() => navigate(`/video/${id}`)}
+            >
+                <Box sx={{ position: 'relative', width: 360, height: 220, borderRadius: '10px'}}>
+                    {isHovered ? (
+                        <video
+                            ref={videoRef}
+                            width="100%"
+                            height="100%"
+                            autoPlay
+                            muted
+                            loop
+                            style={{ borderRadius: '10px', objectFit: 'cover' }}
                         >
-                            <PlayArrow sx={{ color: 'white' }} />
-                        </IconButton>
-                    </Tooltip>
-                )}
-            </Box>
+                            Your browser does not support the video tag.
+                        </video>
+                    ) : (
+                        <img
+                            src={image}
+                            alt={name}
+                            style={{ width: '100%', height: '100%', borderRadius: '10px' }}
+                        />
+                    )}
 
-            <Box sx={{ padding: 2 }}>
-                <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: 'black' }} noWrap>
-                    {name}
-                </Typography>
-
-                <Box sx={{ display: 'flex', alignItems: 'center', marginTop: 1 }}>
-                    {/*<Avatar sx={{ width: 24, height: 24 }} alt={channel.name} src={channel.avatar} />*/}
-                    {/*<Typography variant="body2" sx={{ marginLeft: 1, color: 'gray' }}>*/}
-                    {/*    {channel.name}*/}
-                    {/*</Typography>*/}
-                    {/*<Typography variant="body2" sx={{ marginLeft: 2, color: 'gray' }}>*/}
-                    {/*    {timeAgo}*/}
-                    {/*</Typography>*/}
+                    {isHovered && (
+                        <Tooltip title="播放" placement="top" arrow>
+                            <IconButton
+                                onClick={handlePlayClick}
+                                sx={{
+                                    position: 'absolute',
+                                    top: '50%',
+                                    left: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                                    padding: 1,
+                                }}
+                            >
+                                <PlayArrow sx={{ color: 'white' }} />
+                            </IconButton>
+                        </Tooltip>
+                    )}
+                </Box>
+            </Paper>
+            <Box sx={{ padding: 2, color: 'white', borderRadius: 2, display: 'inline-block' }}>
+                <Box sx={{display: 'flex', alignItems: 'center'}}>
+                    <UserAvatar src="https://image-10001577.image.myqcloud.com/upload/3/20170412/1492007452202.jpg" avatarSize={40} size={50}/>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', marginLeft: 1 }}>
+                        <Typography variant="h6" sx={{ fontWeight: 'bold' }} noWrap>
+                            {name}
+                        </Typography>
+                        <Typography variant="body2">
+                            {user_name}
+                        </Typography>
+                    </Box>
                 </Box>
 
-                {/*<Typography variant="body2" sx={{ color: 'gray', marginTop: 0.5 }}>*/}
-                {/*    {views} 观看*/}
-                {/*</Typography>*/}
+                <Box sx={{ display: 'flex', alignItems: 'center', marginTop: 1 }}>
+
+                    <Typography variant="body2">
+                        3000+ 观看 * &nbsp;
+                    </Typography>
+                    <Typography variant="body2">
+                        {timeAgo}
+                    </Typography>
+                </Box>
             </Box>
-        </Paper>
+        </Box>
     );
 };
 

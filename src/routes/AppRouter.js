@@ -9,6 +9,7 @@ import Register from "../pages/Register";
 import VideoDetail from "../pages/VideoDetail";
 import VideoList from "../pages/VideoList";
 import UserList from "../components/user/UserList";
+import VideoUpload from "../components/video/VideoUpload";
 
 export default function AppRouter(){
     return (
@@ -21,6 +22,7 @@ export default function AppRouter(){
                 <Route path="/users" element={<UserList/>}/>
                 <Route path="/video/detail/:videoId" element={<VideoDetail/>}/>
                 <Route path="/register" element={<Register/>}/>
+                <Route path="/video/upload" element={<VideoUpload/>}/>
                 <Route path="*" element={<NotFound/>}/>
             </Routes>
         </Router>

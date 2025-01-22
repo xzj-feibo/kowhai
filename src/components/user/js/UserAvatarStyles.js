@@ -27,8 +27,8 @@ export const LightRing = styled(Box)({
 
 // 黑色背景
 export const Background = styled(Box)(({ size }) => ({
-    width: `${size - 8}px`,
-    height: `${size - 8}px`,
+    width: `${size - 4}px`,
+    height: `${size - 4}px`,
     borderRadius: '50%',
     backgroundColor: 'black',
     display: 'flex',

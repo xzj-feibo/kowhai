@@ -1,86 +1,123 @@
-import React, { useState } from 'react';
-import {Button, Typography, Box, LinearProgress, ThemeProvider} from '@mui/material';
-import theme from "../../theme";
+import {useEffect, useRef, useState} from "react";
+import { Box, Button, Paper, TextField } from "@mui/material";
+import { uploadVideo } from "../../api/video";
 
-function VideoUpload() {
-    const [videoFile, setVideoFile] = useState(null);
-    const [uploading, setUploading] = useState(false);
-    const [uploadProgress, setUploadProgress] = useState(0);
+export default function VideoUpload() {
+    const [videoFile, setVideoFile] = useState(null);//视频文件
+    const [imgFile, setImgFile] = useState(null);//封面文件
+    const [videoName, setVideoName] = useState(""); // 使用 state 管理视频名称
+    const videoRef = useRef(null); // 引用 video 元素
+    const imgRef = useRef(null); // 引用 img 元素
+    const [duration, setDuration] = useState(null); // 用于存储视频时长
 
-    // 处理文件选择
-    const handleFileChange = (event) => {
-        const file = event.target.files[0];
-        if (file && file.type.startsWith('video/')) {
-            setVideoFile(file);
-        } else {
-            alert('Please select a valid video file.');
+    const handleVideoFileChange = (e) => {
+        const selectedVideoFile = e.target.files[0];
+        setVideoFile(selectedVideoFile);
+
+        // 使用 URL.createObjectURL() 创建文件的临时 URL
+        const videoUrl = URL.createObjectURL(selectedVideoFile);
+        // 在 videoRef.current 有效时设置 video 元素的 src
+        if (videoRef.current) {
+            const videoElement = videoRef.current;
+            videoElement.src = videoUrl;
+            videoElement.onloadedmetadata = () => {
+                setDuration(videoElement.duration); // 获取视频时长
+            };
         }
     };
 
-    // 模拟上传功能
-    const handleUpload = () => {
-        if (!videoFile) {
-            alert('Please select a video file.');
-            return;
+    const handleImgFileChange = (e) => {
+        const selectedImgFile = e.target.files[0];
+        setImgFile(selectedImgFile);
+        // 使用 URL.createObjectURL() 创建文件的临时 URL
+        const imgUrl = URL.createObjectURL(selectedImgFile);
+        if (imgRef.current) {
+            const imgElement = imgRef.current;
+            imgElement.src = imgUrl;
         }
+    }
 
-        setUploading(true);
-
-        // 模拟文件上传
-        const fakeUploadProgress = () => {
-            if (uploadProgress < 100) {
-                setUploadProgress(uploadProgress + 10);
-            } else {
-                setUploading(false);
-                alert('Video uploaded successfully!');
-            }
-        };
-
-        const interval = setInterval(fakeUploadProgress, 500);
-
-        // 清理定时器
-        return () => clearInterval(interval);
+    const handleUploadClick = async () => {
+        console.log(videoRef.current); // 这里可以检查 videoRef 是否为 null
+        console.log(imgRef.current);   // 这里可以检查 imgRef 是否为 null
+        if (videoName === ""){
+            setVideoName(videoFile.name)
+        }
+        // 使用视频名称和时长上传视频
+        const response = await uploadVideo(1, videoName, duration, imgFile, videoFile);
+        console.log("Upload response:", response);
     };
+
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-            <Typography variant="h6" sx={{color: 'white'}}>Upload Video</Typography>
+        <Paper sx={{
+            backgroundColor: "white",
+            height: "100vh",
+            width: "100vw",
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+        }}>
+            <Box sx={{display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '5px'}}>
+                <input
+                    id="upload-video-file"
+                    type="file"
+                    accept="video/*"
+                    style={{display: "none"}} // 隐藏默认文件选择框
+                    onChange={handleVideoFileChange}
+                />
+                <label htmlFor="upload-video-file">
+                    <Button variant="contained" component="span">
+                        Choose Video File
+                    </Button>
+                </label>
 
-            <input
-                accept="video/*"
-                type="file"
-                onChange={handleFileChange}
-                style={{ display: 'none' }}
-                id="video-upload"
+                <Box>
+                    <video
+                        ref={videoRef} // 引用 video 元素
+                        controls
+                        style={{width: "300px", height: "300px", margin: '10px', borderRadius: '16px'}}
+                    >
+                        Your browser does not support the video tag.
+                    </video>
+                    <p>Selected file: {videoFile === null ? "未选择文件" : videoFile.name}</p>
+                    {duration && <p>Video Duration: {duration.toFixed(2)} seconds</p>} {/* 显示视频时长 */}
+                </Box>
+            </Box>
+
+            <Box sx={{display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '5px'}}>
+                <input
+                    id="upload-img-file"
+                    type="file"
+                    accept="image/*"
+                    style={{display: "none"}} // 隐藏默认文件选择框
+                    onChange={handleImgFileChange}
+                />
+                <label htmlFor="upload-img-file">
+                    <Button variant="contained" component="span">
+                        Choose Cover File
+                    </Button>
+                </label>
+                <Box>
+                    <img ref={imgRef} style={{width: "300px", height: "300px", margin: '10px', borderRadius: '16px'}} alt="未选择图片"/>
+                </Box>
+            </Box>
+
+            <TextField
+                sx={{margin: "15px"}}
+                label="Input your video name"
+                value={videoName} // 绑定到 state
+                onChange={(e) => setVideoName(e.target.value)} // 更新 videoName state
             />
-            <label htmlFor="video-upload">
-                <Button variant="contained" component="span" disabled={uploading}>
-                    Choose Video
-                </Button>
-            </label>
-
-            {videoFile && (
-                <Typography variant="body2" sx={{ wordBreak: 'break-all' }}>
-                    {videoFile.name}
-                </Typography>
-            )}
-
-            {uploading && (
-                <>
-                    <LinearProgress sx={{ width: '100%' }} variant="determinate" value={uploadProgress} />
-                    <Typography variant="body2">{uploadProgress}%</Typography>
-                </>
-            )}
-
-            <Button
-                variant="contained"
-                onClick={handleUpload}
-                disabled={uploading || !videoFile}
-            >
-                {uploading ? 'Uploading...' : 'Upload Video'}
+            <Button onClick={handleUploadClick} variant="contained" color="primary">
+                Upload
             </Button>
-        </Box>
+        </Paper>
     );
 }
-
-export default VideoUpload;
