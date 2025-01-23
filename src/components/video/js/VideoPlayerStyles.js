@@ -7,16 +7,16 @@ export const StyledVideo = styled('video')({
     left: 0,
     width: '100%',
     height: '100%',
-    borderRadius: '25px',
+    borderRadius: '20px',
     zIndex: 1,
     cursor: 'pointer'
 })
 
-export const ProcessBar = styled(Box)(({progressBarWidth}) => ({
+export const ProcessBar = styled(Box)(() => ({
     position: 'absolute',
     bottom: '70px',
     left: '50%',
-    width: progressBarWidth,
+    width: '95%',
     height: '15px',
     backgroundColor: 'transparent',
     borderRadius: '3px',
@@ -31,35 +31,40 @@ export const InProcessBar = styled(Box)(({progressBarHeight}) => ({
     height: progressBarHeight,
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
     position: 'absolute',
-    top: '5px'
+    zIndex:1
 }))
 
 export const LoadedProgress = styled(Box)(({loadedProgress}) => ({
     width: `${loadedProgress}%`,
     height: '100%',
-    backgroundColor: 'rgba(255, 255, 255, 0.5)'
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    zIndex:2,
 }))
 
-export const Progress = styled(Box)(({progress}) => ({
-    width: `${progress}%`,
-    height: '100%',
-    backgroundColor: theme.palette.primary.main,
+export const StyledSlider = styled(Slider)(() => ({
+    height: '3px',
+    width: "100%",
     position: 'absolute',
-    top: 0,
-    left: 0
-}))
-
-export const Dot = styled(Box)(({progress}) => ({
-    position: 'absolute',
-    top: '-5px',
-    left: `${progress}%`,
-    width: '12px',
-    height: '12px',
-    backgroundColor: theme.palette.primary.main,
-    borderRadius: '50%',
-    transform: 'translateX(-50%)',
-    zIndex: 4
-}))
+    bottom: '-13px',
+    zIndex: 3,
+    // '& .MuiSlider-thumb': {
+    //     width: '10px', // 调整滑块大小
+    //     height: '10px',
+    //     display: 'flex',
+    //     justifyContent: 'center',
+    //     alignItems: 'center',
+    //     '& svg': {
+    //         width: '100%',
+    //         height: '100%',
+    //     }
+    // },
+    '& .MuiSlider-rail': {
+        backgroundColor: 'transparent', // 设置未滑动部分的颜色
+    },
+    '& .MuiSlider-track': {
+        backgroundColor: theme.palette.primary.main, // 设置已滑动部分的颜色
+    }
+}));
 
 export const PlayingBox = styled(Box)({
     position: 'absolute',
@@ -82,10 +87,6 @@ export const VolumeSlider = styled(Slider)({
     width: '150px',
     color: theme.palette.primary.main,
     height: '2px',
-    '& .MuiSlider-thumb': {
-        width: 12,
-        height: 12,
-    }
 })
 
 export const FullScreenBox = styled(Box)({

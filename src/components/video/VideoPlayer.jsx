@@ -1,18 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Hls from 'hls.js';
-import { Box, Paper, IconButton } from '@mui/material';
+import {Box, Paper, IconButton, SliderThumb} from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
-import { VolumeOff, VolumeUp, PictureInPictureAlt } from "@mui/icons-material";
+import {VolumeOff, VolumeUp, PictureInPictureAlt, PersonalVideo} from "@mui/icons-material";
 import {
-    Dot, FullScreenBox, InProcessBar, LoadedProgress,
-    PIPBox, PlayingBox, ProcessBar, Progress,
+    FullScreenBox, InProcessBar, LoadedProgress,
+    PIPBox, PlayingBox, ProcessBar, StyledSlider,
     StyledVideo, VolumeBox, VolumeSlider,
 } from './js/VideoPlayerStyles'
 
-const VideoPlayer = ({ src }) => {
+const VideoPlayer = ({ src, image }) => {
     const videoRef = useRef(null);
     const [progress, setProgress] = useState(0);
     const [loadedProgress, setLoadedProgress] = useState(0);
@@ -23,13 +23,13 @@ const VideoPlayer = ({ src }) => {
     const [showVolumeSlider, setShowVolumeSlider] = useState(false);
     const [sliderWidth, setSliderWidth] = useState(0);
     const [showControls, setShowControls] = useState(true);
-    const [progressBarWidth, setProgressBarWidth] = useState('95%');
     const [progressBarHeight, setProgressBarHeight] = useState('3px');
     const [isMiniMode, setIsMiniMode] = useState(false);
     //当前播放时间
     const currentTime = videoRef.current ? videoRef.current.currentTime : 0;
     //视频总时长
     const duration = videoRef.current ? videoRef.current.duration : 0;
+
 
     useEffect(() => {
         const videoElement = videoRef.current;
@@ -62,6 +62,7 @@ const VideoPlayer = ({ src }) => {
 
         videoElement.addEventListener('timeupdate', handleTimeUpdate);
 
+        videoElement.autoPlay = true;
         const handleFullscreenChange = () => {
             setIsFullscreen(!!document.fullscreenElement);
         };
@@ -91,12 +92,10 @@ const VideoPlayer = ({ src }) => {
     };
 
     const handleMouseEnterProgressBar = () => {
-        setProgressBarWidth('100%');
-        setProgressBarHeight('5px');
+        setProgressBarHeight('4px');
     };
 
     const handleMouseLeaveProgressBar = () => {
-        setProgressBarWidth('95%');
         setProgressBarHeight('3px');
     };
 
@@ -174,6 +173,12 @@ const VideoPlayer = ({ src }) => {
         setIsMiniMode(!isMiniMode);
     };
 
+    const handleEnd = () => {
+        const videoElement = videoRef.current;
+        setIsPlaying(false);
+        videoElement.currentTime = 0;
+    }
+
     const miniModeStyles = {
         position: 'fixed',
         bottom: 20,
@@ -189,13 +194,23 @@ const VideoPlayer = ({ src }) => {
 
     // 格式化时间（mm:ss）
     const formatTime = (seconds) => {
-        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(seconds / 3600);
+        let minutes;
+        if (hours < 1){
+            minutes = Math.floor((seconds) / 60)
+        }else{
+            minutes = Math.floor((seconds % 3600) / 60);
+        }
         const remainingSeconds = Math.floor(seconds % 60);
-        return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+        if (hours < 1){
+            //padStart(2,'0')为补充前导0
+            return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+        }
+        return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
     };
 
     return (
-        <Box sx={{ maxWidth: 1200, margin: '80px 80px auto', padding: 2 }}>
+        <Box sx={{maxWidth: 1200, margin: '80px 80px auto', padding: 2}}>
             <Paper
                 elevation={3}
                 sx={{
@@ -207,7 +222,7 @@ const VideoPlayer = ({ src }) => {
                     position: 'relative',
                     paddingBottom: '56.25%',
                     height: 0,
-                    ...(isMiniMode && { paddingBottom: '0', height: '100%' }),
+                    ...(isMiniMode && {paddingBottom: '0', height: '100%'}),
                 }}
                      onMouseEnter={handleMouseEnterVideo}
                      onMouseLeave={handleMouseLeaveVideo}>
@@ -215,6 +230,8 @@ const VideoPlayer = ({ src }) => {
                     <StyledVideo
                         ref={videoRef}
                         controls={false}
+                        preload
+                        onEnded={handleEnd}
                         onClick={handleVideoClick}
                     />
                     {showControls && (
@@ -222,25 +239,40 @@ const VideoPlayer = ({ src }) => {
                             <ProcessBar onClick={handleProgressBarClick}
                                         onMouseEnter={handleMouseEnterProgressBar}
                                         onMouseLeave={handleMouseLeaveProgressBar}
-                                        progressBarWidth={progressBarWidth}>
+                            >
 
                                 <InProcessBar progressBarHeight={progressBarHeight}>
                                     <LoadedProgress loadedProgress={loadedProgress}/>
-                                    <Progress progress={progress}/>
-                                    <Dot progress={progress}/>
+                                    {/*进度条*/}
+                                    <StyledSlider
+                                        value={progress}
+                                        aria-label="Small"
+                                        valueLabelDisplay="auto"
+                                        min={0}
+                                        max={100}
+                                        valueLabelFormat={(currentTime)=>formatTime(currentTime)}
+                                        onChange={(event, newValue) => {
+                                            setProgress(newValue); // 实时更新进度
+                                        }}
+                                        onChangeCommitted={(event, newValue) => {
+                                            // 你可以在这里同步更新 `videoRef.current.currentTime`
+                                            const videoElement = videoRef.current;
+                                            videoElement.currentTime = (newValue / 100) * videoElement.duration;
+                                        }}
+                                    />
                                 </InProcessBar>
                             </ProcessBar>
 
                             <PlayingBox>
-                                <IconButton onClick={togglePlayPause} sx={{ color: 'white' }}>
-                                    {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
+                                <IconButton onClick={togglePlayPause} sx={{color: 'white'}}>
+                                    {isPlaying ? <PauseIcon/> : <PlayArrowIcon/>}
                                 </IconButton>
 
                                 <VolumeBox sliderWidth={sliderWidth}
                                            onMouseEnter={handleMouseEnterVolume}
                                            onMouseLeave={handleMouseLeaveVolume}>
-                                    <IconButton onClick={toggleMute} sx={{ color: 'white' }}>
-                                        {isMuted ? <VolumeOff /> : <VolumeUp />}
+                                    <IconButton onClick={toggleMute} sx={{color: 'white'}}>
+                                        {isMuted ? <VolumeOff/> : <VolumeUp/>}
                                     </IconButton>
                                     {showVolumeSlider && (
                                         <VolumeSlider
@@ -255,19 +287,26 @@ const VideoPlayer = ({ src }) => {
                             </PlayingBox>
 
                             {/* 显示时间 */}
-                            <Box sx={{ position: 'absolute', bottom: '23px', right: '110px', color: 'white', fontSize: '14px',zIndex: 4 }}>
+                            <Box sx={{
+                                position: 'absolute',
+                                bottom: '23px',
+                                right: '110px',
+                                color: 'white',
+                                fontSize: '14px',
+                                zIndex: 4
+                            }}>
                                 {formatTime(currentTime)} / {formatTime(duration)}
                             </Box>
 
                             <FullScreenBox>
-                                <IconButton onClick={toggleFullscreen} sx={{ color: 'white' }}>
-                                    {isFullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
+                                <IconButton onClick={toggleFullscreen} sx={{color: 'white'}}>
+                                    {isFullscreen ? <FullscreenExitIcon/> : <FullscreenIcon/>}
                                 </IconButton>
                             </FullScreenBox>
 
                             <PIPBox>
-                                <IconButton onClick={toggleMiniMode} sx={{ color: 'white' }}>
-                                    <PictureInPictureAlt />
+                                <IconButton onClick={toggleMiniMode} sx={{color: 'white'}}>
+                                    <PictureInPictureAlt/>
                                 </IconButton>
                             </PIPBox>
                         </>
