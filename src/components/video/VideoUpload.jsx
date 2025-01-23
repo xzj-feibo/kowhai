@@ -38,14 +38,12 @@ export default function VideoUpload() {
     }
 
     const handleUploadClick = async () => {
-        console.log(videoRef.current); // 这里可以检查 videoRef 是否为 null
-        console.log(imgRef.current);   // 这里可以检查 imgRef 是否为 null
         if (videoName === ""){
             setVideoName(videoFile.name)
         }
         // 使用视频名称和时长上传视频
         const response = await uploadVideo(1, videoName, duration, imgFile, videoFile);
-        console.log("Upload response:", response);
+        // console.log("Upload response:", response);
     };
 
 

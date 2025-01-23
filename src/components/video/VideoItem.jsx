@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, Typography, Paper, IconButton, Avatar, Tooltip } from '@mui/material';
+import { Box, Typography, Paper, IconButton, Tooltip } from '@mui/material';
 import { PlayArrow } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import {formatDistanceToNow, parseISO} from 'date-fns';
@@ -76,28 +76,22 @@ const VideoItem = ({ video }) => {
                 }}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
-                onClick={() => navigate(`/video/${id}`)}
+                onClick={handlePlayClick}
             >
-                <Box sx={{ position: 'relative', width: 360, height: 220, borderRadius: '10px'}}>
-                    {isHovered ? (
-                        <video
-                            ref={videoRef}
-                            width="100%"
-                            height="100%"
-                            autoPlay
-                            muted
-                            loop
-                            style={{ borderRadius: '10px', objectFit: 'cover' }}
-                        >
-                            Your browser does not support the video tag.
-                        </video>
-                    ) : (
-                        <img
-                            src={image}
-                            alt={name}
-                            style={{ width: '100%', height: '100%', borderRadius: '10px' }}
-                        />
-                    )}
+                <Box sx={{position: 'relative', width: 360, height: 220, borderRadius: '10px'}}>
+                    <video
+                        ref={videoRef}
+                        width="100%"
+                        height="100%"
+                        autoPlay={isHovered} // 悬停时自动播放
+                        muted
+                        loop
+                        preload
+                        poster={image} // 使用封面图
+                        style={{borderRadius: '10px', objectFit: 'cover'}}
+                    >
+                        Your browser does not support the video tag.
+                    </video>
 
                     {isHovered && (
                         <Tooltip title="播放" placement="top" arrow>
@@ -112,17 +106,18 @@ const VideoItem = ({ video }) => {
                                     padding: 1,
                                 }}
                             >
-                                <PlayArrow sx={{ color: 'white' }} />
+                                <PlayArrow sx={{color: 'white'}}/>
                             </IconButton>
                         </Tooltip>
                     )}
                 </Box>
             </Paper>
-            <Box sx={{ padding: 2, color: 'white', borderRadius: 2, display: 'inline-block' }}>
+            <Box sx={{padding: 2, color: 'white', borderRadius: 2, display: 'inline-block'}}>
                 <Box sx={{display: 'flex', alignItems: 'center'}}>
-                    <UserAvatar src="https://image-10001577.image.myqcloud.com/upload/3/20170412/1492007452202.jpg" avatarSize={40} size={50}/>
+                    <UserAvatar src="https://image-10001577.image.myqcloud.com/upload/3/20170412/1492007452202.jpg"
+                                avatarSize={40} size={50}/>
                     <Box sx={{ display: 'flex', flexDirection: 'column', marginLeft: 1 }}>
-                        <Typography variant="h6" sx={{ fontWeight: 'bold' }} noWrap>
+                        <Typography variant="h7" sx={{ fontWeight: 'bold' }} noWrap>
                             {name}
                         </Typography>
                         <Typography variant="body2">

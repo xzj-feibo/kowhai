@@ -81,10 +81,10 @@ export default function Login() {
                            />
 
                 {/* 登录按钮 */}
-                <StyledButton variant="contained"
-                        color="primary"
-                        fullWidth
-                        onClick={(event) => handleLogin(event,0)}
+                <StyledButton
+                    variant="contained"
+                    fullWidth
+                    onClick={(event) => handleLogin(event,0)}
                 >
                     Login
                 </StyledButton>
@@ -100,8 +100,8 @@ export default function Login() {
                 {/*注册链接*/}
                 <StyledLink
                     to="/register"
-                    onMouseEnter={e => e.target.style.color = theme.palette.primary.main}
-                    onMouseLeave={e => e.target.style.color = theme.palette.secondary.main}
+                    onMouseEnter={e => e.target.style.color = theme.palette.secondary.main}
+                    onMouseLeave={e => e.target.style.color = theme.palette.primary.main}
                 >
                     without an account?
                 </StyledLink>
