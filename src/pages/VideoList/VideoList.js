@@ -8,7 +8,8 @@ export const TopButton = styled(Button)(({isSelected}) => ({
         color: '#212121'
     },
     marginRight: '12px',
-    marginBottom: '5px'
+    marginBottom: '25px',
+    marginTop: '10px'
 }))
 
 export const AsideListItem = styled(ListItem)(({isSelected}) => ({

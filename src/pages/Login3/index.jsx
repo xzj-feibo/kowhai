@@ -1,5 +1,5 @@
 /**
- * 第三方登陆
+ * 第三方登陆页
  */
 import * as React from 'react';
 import { AppProvider } from '@toolpad/core/AppProvider';

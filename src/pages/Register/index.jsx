@@ -1,3 +1,6 @@
+/**
+ * 注册页
+ */
 import React, { useState } from "react";
 import {
     FormControl,
@@ -34,17 +37,36 @@ export default function Register() {
     const [snackbarSeverity, setSnackbarSeverity] = useState('error'); // 提示框的类型（error, success, warning, info）
 
     const [activeStep, setActiveStep] = useState(0);
+    //三个注册框的移动方向，需要【一右一左】才行
+    const [direction1, setDirection1] = useState('')
+    const [direction2, setDirection2] = useState('')
+    const [direction3, setDirection3] = useState('')
+
     const steps = ["Personal Information", "Gender", "Birthday"];
     const navigate = useNavigate(); // 获取 navigate 函数
     const handleInputChange = (newValues) => {
         setUser(prevState => ({ ...prevState, ...newValues }));
     };
 
-    const handleNext = () => {
+    const handleNext = (i) => {
+        if (i === 1){
+            setDirection1('right')
+            setDirection2('left')
+        }else if (i === 2){
+            setDirection2('right')
+            setDirection3('left')
+        }
         setActiveStep(prevStep => prevStep + 1);
     };
 
-    const handleBack = () => {
+    const handleBack = (i) => {
+        if (i === 2){
+            setDirection3('left')
+            setDirection2('right')
+        }else if(i === 1){
+            setDirection2('left')
+            setDirection1('right')
+        }
         setActiveStep(prevStep => prevStep - 1);
     };
 
@@ -89,22 +111,21 @@ export default function Register() {
 
     return (
         <Box>
-            <RegisterBox>
-                <TitleBox>
-                    <h2 style={{fontFamily: theme.typography.loginRegisterTopicFont}}>Register an account</h2>
-                </TitleBox>
+            {/* Wrap the entire form in a Slide component to animate the whole form */}
+            <Slide direction={direction1} in={activeStep === 0} mountOnEnter unmountOnExit timeout={{ enter: 1000, exit: 800 }} >
+                <RegisterBox>
+                    <TitleBox>
+                        <h2 style={{fontFamily: theme.typography.loginRegisterTopicFont}}>Register an account</h2>
+                    </TitleBox>
 
-                <Stepper activeStep={activeStep} alternativeLabe sx={{marginBottom: "15px"}}>
-                    {steps.map((label) => (
-                        <Step key={label}>
-                            <StepLabel>{label}</StepLabel>
-                        </Step>
-                    ))}
-                </Stepper>
-
-                {/* Wrap the entire form in a Slide component to animate the whole form */}
-                <Slide direction="left" in={activeStep === 0} mountOnEnter unmountOnExit>
-                    <div>
+                    <Stepper activeStep={activeStep} alternativeLabe sx={{marginBottom: "15px"}}>
+                        {steps.map((label) => (
+                            <Step key={label}>
+                                <StepLabel>{label}</StepLabel>
+                            </Step>
+                        ))}
+                    </Stepper>
+                    <Box>
                         {/* Step 1: Personal Information */}
                         <StyledTextField id="name"
                             label="Name"
@@ -140,7 +161,7 @@ export default function Register() {
                             onChange={(e) => setUser(prevState => ({ ...prevState, phone: e.target.value }))}
                         />
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <StyledButton variant="contained" onClick={handleNext} sx={{
+                            <StyledButton variant="contained" onClick={() => handleNext(1)} sx={{
                                 marginRight: '50px'
                             }}>Next</StyledButton>
 
@@ -148,11 +169,24 @@ export default function Register() {
                                 marginTop: '40px'
                             }} onClick={handleBackToLogin}>Back to Login</StyledButton>
                         </Box>
-                    </div>
-                </Slide>
+                    </Box>
+                </RegisterBox>
+            </Slide>
 
-                <Slide direction="left" in={activeStep === 1} mountOnEnter unmountOnExit>
-                    <div>
+            <Slide direction={direction2} in={activeStep === 1} mountOnEnter unmountOnExit  timeout={{ enter: 1000, exit: 800 }}>
+                <RegisterBox>
+                    <TitleBox>
+                        <h2 style={{fontFamily: theme.typography.loginRegisterTopicFont}}>Register an account</h2>
+                    </TitleBox>
+
+                    <Stepper activeStep={activeStep} alternativeLabe sx={{marginBottom: "15px"}}>
+                        {steps.map((label) => (
+                            <Step key={label}>
+                                <StepLabel>{label}</StepLabel>
+                            </Step>
+                        ))}
+                    </Stepper>
+                    <Box>
                         {/* Step 2: Gender and Avatar */}
                         <FormControl sx={{ alignSelf: 'flex-start', marginBottom: '50px'}}>
                             <FormLabel>Gender</FormLabel>
@@ -171,47 +205,45 @@ export default function Register() {
 
                         {/* Navigation Buttons */}
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <IconButton onClick={handleBack} sx={{ position: 'absolute', top: 16, left: 16 }}>
+                            <IconButton onClick={() => handleBack(1)} sx={{ position: 'absolute', top: 16, left: 16 }}>
                                 <ArrowBackIcon />
                             </IconButton>
-                            <StyledButton variant="contained" onClick={handleNext} sx={{
+                            <StyledButton variant="contained" onClick={() => handleNext(2)} sx={{
                                 marginTop: '100px'
                             }}>Next</StyledButton>
                         </Box>
-                    </div>
-                </Slide>
+                    </Box>
+                </RegisterBox>
+            </Slide>
 
-                <Slide direction="left" in={activeStep === 2} mountOnEnter unmountOnExit>
-                    <div>
+            <Slide direction={direction3} in={activeStep === 2} mountOnEnter unmountOnExit  timeout={{ enter: 800, exit: 800 }}>
+                <RegisterBox>
+                    <TitleBox>
+                        <h2 style={{fontFamily: theme.typography.loginRegisterTopicFont}}>Register an account</h2>
+                    </TitleBox>
+
+                    <Stepper activeStep={activeStep} alternativeLabe sx={{marginBottom: "15px"}}>
+                        {steps.map((label) => (
+                            <Step key={label}>
+                                <StepLabel>{label}</StepLabel>
+                            </Step>
+                        ))}
+                    </Stepper>
+                    <Box>
                         {/* Step 3: Birthday */}
                         <FormLabel sx={{marginBottom: '26px', marginTop: '100px'}}>Birthday</FormLabel>
                         <BirthdayInput onChange={(birthday) => handleInputChange({ birth: `${birthday.day}-${birthday.month}-${birthday.year}` })} onKeyDown={(event) => {handleRegister(event, 1)}}/>
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <IconButton onClick={handleBack} sx={{ position: 'absolute', top: 16, left: 16 }}>
+                            <IconButton onClick={() => handleBack(2)} sx={{ position: 'absolute', top: 16, left: 16 }}>
                                 <ArrowBackIcon />
                             </IconButton>
                             <StyledButton variant="contained" sx={{
                                 marginTop: '90px'
                             }} onClick={(event) => handleRegister(event, 0)}>Register</StyledButton>
                         </Box>
-                    </div>
-                </Slide>
-            </RegisterBox>
-            {/* Snackbar提示框 */}
-            <Snackbar
-                open={openSnackbar}
-                autoHideDuration={6000}
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}  // 顶部居中显示
-                onClose={handleCloseSnackbar}
-            >
-                <Alert
-                    onClose={handleCloseSnackbar}
-                    severity={snackbarSeverity}
-                    sx={{ width: '100%' }}
-                >
-                    {snackbarMessage}
-                </Alert>
-            </Snackbar>
+                    </Box>
+                </RegisterBox>
+            </Slide>
         </Box>
     );
 }

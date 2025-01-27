@@ -1,3 +1,6 @@
+/**
+ * 视频详情页
+ */
 import VideoPlayer from "../../components/video/VideoPlayer";
 import React from "react";
 import {useLocation} from "react-router-dom";

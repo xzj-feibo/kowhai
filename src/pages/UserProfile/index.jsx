@@ -1,4 +1,6 @@
-// 用户主页
+/**
+ * 用户详情页
+ */
 
 import React from "react";
 import {
