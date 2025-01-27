@@ -16,7 +16,7 @@ const VideoPlayer = ({ src, image }) => {
     const videoRef = useRef(null);
     const [progress, setProgress] = useState(0);
     const [loadedProgress, setLoadedProgress] = useState(0);
-    const [isPlaying, setIsPlaying] = useState(false);
+    const [isPlaying, setIsPlaying] = useState(true);
     const [volume, setVolume] = useState(1);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
@@ -231,6 +231,7 @@ const VideoPlayer = ({ src, image }) => {
                         ref={videoRef}
                         controls={false}
                         preload
+                        autoPlay
                         onEnded={handleEnd}
                         onClick={handleVideoClick}
                     />
