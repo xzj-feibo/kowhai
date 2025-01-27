@@ -1,3 +1,6 @@
+/**
+ * 视频列表，系统首页
+ */
 import VideoItem from '../../components/video/VideoItem';
 import {useEffect, useRef, useState} from "react";
 import {getVideos, searchByName} from "../../api/video";
@@ -33,12 +36,12 @@ export default function VideoList() {
     let [pageSize, setPageSize] = useState(0);
 
     //判断顶部菜单项选中
-    const [topIsSelected, setTopIsSelected] = useState(null);
+    const [topIsSelected, setTopIsSelected] = useState(0);
     //判断侧边栏选项选中
-    const [asideIsSelected, setAsideIsSelected] = useState(null)
+    const [asideIsSelected, setAsideIsSelected] = useState(0)
 
     //顶部菜单
-    const topMenuItems = ['全部', '音乐', '美食', '游戏', '鬼畜', '极限运动', '体育', '旅游', '发现新视频']
+    const topMenuItems = ['全部', '音乐', '美食', '风景', '游戏', '鬼畜', '运动', '旅游', '发现新视频']
 
     //侧边栏选项菜单
     const asideMenuItems = [
@@ -106,7 +109,7 @@ export default function VideoList() {
                     <Box sx={{display: 'inline-flex', alignItems: 'center'}}>
                         <img src='/imgs/kowhai.png' style={{width: '50px', height: '40px', marginLeft: '8px'}}
                              alt='无图片'/>&nbsp;&nbsp;
-                        <h3>Kowhai</h3>
+                        <h2>Kowhai</h2>
                     </Box>
                     <List sx={{ width: '200px' }}>
                         {asideMenuItems.map((item) => {

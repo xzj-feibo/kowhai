@@ -1,3 +1,6 @@
+/**
+ * 404页
+ */
 import React from 'react';
 import {Box, Typography} from "@mui/material";
 
