@@ -3,7 +3,7 @@
  */
 import VideoItem from '../../components/video/VideoItem';
 import {useEffect, useRef, useState} from "react";
-import {getVideos, searchByName} from "../../api/video";
+import {getVideos, getVideosByLabel, searchByName} from "../../api/video";
 import {
     Box,
     Divider,
@@ -58,21 +58,24 @@ export default function VideoList() {
     const subscriptions = [{}]
     const inputRef = useRef("");
 
+    //获取全部视频
+    const fetchVideos = async () => {
+        try {
+            const data = await getVideos(); // Fetch video data
+            const videos = data.data.map((video) => ({
+                ...video, // Copy other fields of video
+                createTime: video.audit.create_time, // Extract and add createTime field
+            }));
+            setVideos(videos); // Update video data
+            setPage(data.page); // Update page
+            setPageSize(data.pageSize); // Update pageSize
+        } catch (error) {
+            console.error("Failed to fetch videos:", error);
+        }
+    };
+
     useEffect(() => {
-        const fetchVideos = async () => {
-            try {
-                const data = await getVideos(); // Fetch video data
-                const videos = data.data.map((video) => ({
-                    ...video, // Copy other fields of video
-                    createTime: video.audit.create_time, // Extract and add createTime field
-                }));
-                setVideos(videos); // Update video data
-                setPage(data.page); // Update page
-                setPageSize(data.pageSize); // Update pageSize
-            } catch (error) {
-                console.error("Failed to fetch videos:", error);
-            }
-        };
+
         fetchVideos(); // Call async function
     }, []); // Empty array means it runs once on component mount
 
@@ -84,6 +87,26 @@ export default function VideoList() {
         //todo
     }
 
+    const handleGetVideosByLabel = async (label) => {
+        setTopIsSelected(label);
+        if (label === 0){
+           fetchVideos();
+        }
+        else{
+            try {
+                const data = await getVideosByLabel(label);
+                const videos = data.data.map((video) => ({
+                    ...video, // Copy other fields of video
+                    createTime: video.audit.create_time, // Extract and add createTime field
+                }));
+                setVideos(videos); // Update video data
+                setPage(data.page); // Update page
+                setPageSize(data.pageSize); // Update pageSize
+            }catch (error) {
+                console.error("Failed to fetch videos:", error);
+            }
+        }
+    }
     //处理侧边栏选项被点击事件
     function handleListItemClick(id) {
         setAsideIsSelected(id);
@@ -191,7 +214,7 @@ export default function VideoList() {
                     {topMenuItems.map((item, index) => (
                         <TopButton
                             isSelected={topIsSelected === index}
-                            onClick={() => setTopIsSelected(index)}>
+                            onClick={() => handleGetVideosByLabel(index)}>
                             {item}
                         </TopButton>
                     ))}
