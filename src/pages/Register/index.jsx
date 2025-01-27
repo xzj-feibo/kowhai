@@ -37,10 +37,10 @@ export default function Register() {
     const [snackbarSeverity, setSnackbarSeverity] = useState('error'); // 提示框的类型（error, success, warning, info）
 
     const [activeStep, setActiveStep] = useState(0);
-    //三个注册框的移动方向
-    const [direction1, setDirection1] = useState('right')
-    const [direction2, setDirection2] = useState('right')
-    const [direction3, setDirection3] = useState('right')
+    //三个注册框的移动方向，需要【一右一左】才行
+    const [direction1, setDirection1] = useState('')
+    const [direction2, setDirection2] = useState('')
+    const [direction3, setDirection3] = useState('')
 
     const steps = ["Personal Information", "Gender", "Birthday"];
     const navigate = useNavigate(); // 获取 navigate 函数
