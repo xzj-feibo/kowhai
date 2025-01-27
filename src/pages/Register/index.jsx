@@ -38,7 +38,7 @@ export default function Register() {
 
     const [activeStep, setActiveStep] = useState(0);
     //三个注册框的移动方向，需要【一右一左】才行
-    const [direction1, setDirection1] = useState('')
+    const [direction1, setDirection1] = useState('left')
     const [direction2, setDirection2] = useState('')
     const [direction3, setDirection3] = useState('')
 
@@ -127,13 +127,13 @@ export default function Register() {
                     </Stepper>
                     <Box>
                         {/* Step 1: Personal Information */}
-                        <StyledTextField id="name"
+                        <StyledTextField id="user_name"
                             label="Name"
                             variant="outlined"
                             required
                             fullWidth
                             value={user.user_name}
-                            onChange={(e) => setUser(prevState => ({ ...prevState, name: e.target.value }))}
+                            onChange={(e) => setUser(prevState => ({ ...prevState, user_name: e.target.value }))}
                         />
                         <StyledTextField id="password"
                             label="Password"
