@@ -17,7 +17,7 @@ export const AsideListItem = styled(ListItem)(({isSelected}) => ({
     alignItems: 'center',
     justifyContent: 'left',
     padding: '5px',
-    marginBottom: '5px',
+    marginBottom: '7px',
     color: 'white',
     backgroundColor: isSelected ? '#424242' : 'black',
     borderRadius: '8px',

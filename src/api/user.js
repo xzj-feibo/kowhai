@@ -57,8 +57,8 @@ export const getUserByName = async (name) => {
 export const login = async (userData) => {
     try {
         const response = await axios.post(`${backAddress}/user/login`, userData);
-        var token = "Bearer " + response.data.token;
-        return [response.status,response.data.message,token]
+        const token = "Bearer " + response.data.token;
+        return [response.status,response.data.message,token,response.data.user.id]
     }catch (error){
         if (error.response.status !== 200){
             return [error.response.status,error.response.data.details]
@@ -86,3 +86,14 @@ export const uploadAvatar = async (id, file) => {
         throw error; // 如果发生错误抛出
     }
 };
+
+//查询用户订阅
+export const getSubscriptions = async (userId) => {
+    try {
+        const response = await axios.get(`${backAddress}/v1/subscribe`, {params:{user_id:userId}});
+        return response.data
+    }catch (error){
+        console.error('Get Subscriptions Error:', error);
+        throw error; // 如果发生错误抛出
+    }
+}

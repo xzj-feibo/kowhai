@@ -5,6 +5,7 @@ import VideoItem from '../../components/video/VideoItem';
 import {useEffect, useRef, useState} from "react";
 import {getVideos, getVideosByLabel, searchByName} from "../../api/video";
 import {
+    Avatar,
     Box,
     Divider,
     Drawer,
@@ -29,20 +30,18 @@ import WorkHistoryOutlinedIcon from '@mui/icons-material/WorkHistoryOutlined';
 import WorkHistoryIcon from '@mui/icons-material/WorkHistory';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import {AsideListItem, TopButton, TopListItem} from "./VideoList";
+import {getSubscriptions} from "../../api/user";
+import {type} from "@testing-library/user-event/dist/type";
 
 export default function VideoList() {
     let [videos, setVideos] = useState([]);
-    let [page, setPage] = useState(0);
-    let [pageSize, setPageSize] = useState(0);
 
     //判断顶部菜单项选中
     const [topIsSelected, setTopIsSelected] = useState(0);
     //判断侧边栏选项选中
     const [asideIsSelected, setAsideIsSelected] = useState(0)
-
     //顶部菜单
     const topMenuItems = ['全部', '音乐', '美食', '风景', '游戏', '鬼畜', '运动', '旅游', '发现新视频']
-
     //侧边栏选项菜单
     const asideMenuItems = [
         { id: 0, text: '首页', defaultIcon: <HomeOutlinedIcon />, selectedIcon: <HomeIcon/> },
@@ -53,30 +52,32 @@ export default function VideoList() {
         { id: 5, text: '我的视频', defaultIcon: <VideoLibraryOutlinedIcon />, selectedIcon: <VideoLibraryIcon/> },
         { id: 6, text: '稍后观看', defaultIcon: <WorkHistoryOutlinedIcon />, selectedIcon: <WorkHistoryIcon/> },
     ]
+    //用户订阅的艺人数据（头像+艺人用户名）
+    const [subscriptions, setSubscriptions] = useState([])
 
-    //侧边栏订阅栏目
-    const subscriptions = [{}]
     const inputRef = useRef("");
 
-    //获取全部视频
+//获取全部视频
     const fetchVideos = async () => {
-        try {
-            const data = await getVideos(); // Fetch video data
+        return await getVideos(); // Fetch video data
+    };
+
+    //获取订阅数据
+    const fetchSubscriptions = async (userId) => {
+        return await getSubscriptions(userId);
+    }
+
+    useEffect(() => {
+        fetchVideos().then((data) => {
             const videos = data.data.map((video) => ({
                 ...video, // Copy other fields of video
                 createTime: video.audit.create_time, // Extract and add createTime field
             }));
             setVideos(videos); // Update video data
-            setPage(data.page); // Update page
-            setPageSize(data.pageSize); // Update pageSize
-        } catch (error) {
-            console.error("Failed to fetch videos:", error);
-        }
-    };
-
-    useEffect(() => {
-
-        fetchVideos(); // Call async function
+        });
+        fetchSubscriptions(localStorage.getItem("userId")).then((data) => {
+            setSubscriptions(data.data);
+        })
     }, []); // Empty array means it runs once on component mount
 
     //处理搜索事件
@@ -100,8 +101,6 @@ export default function VideoList() {
                     createTime: video.audit.create_time, // Extract and add createTime field
                 }));
                 setVideos(videos); // Update video data
-                setPage(data.page); // Update page
-                setPageSize(data.pageSize); // Update pageSize
             }catch (error) {
                 console.error("Failed to fetch videos:", error);
             }
@@ -113,7 +112,7 @@ export default function VideoList() {
     }
 
     return (
-        <Box sx={{ display: 'flex', backgroundColor: 'black' }}>
+        <Box sx={{ display: 'flex', backgroundColor: 'black', width: '100vw', height: '100vh' }}>
             {/* 侧边栏 */}
             <Drawer
                 variant="permanent"
@@ -177,6 +176,25 @@ export default function VideoList() {
                                 </AsideListItem>
                             );
                         })}
+                    </List>
+
+                    {/*订阅列表*/}
+                    <List sx={{ width: '200px' }}>
+                        <Divider sx={{ backgroundColor: 'white', marginY: '5px' }} />
+                        <AsideListItem button>
+                            <Box sx={{marginRight: '7px'}}>订阅</Box>
+                            <ListItemIcon sx={{ color: 'white', minWidth: '30px' }}>
+                                <ArrowForwardIosIcon sx={{fontSize: '16px'}}/>
+                            </ListItemIcon>
+                        </AsideListItem>
+                        {subscriptions.map((item) => (
+                            <AsideListItem button>
+                                <Box sx={{marginRight: '7px', display: 'flex', alignItems: 'center'}}>
+                                    <Avatar src={item.avatar} sx={{width: '20px', height: '20px'}}/>
+                                    <Box sx={{marginLeft: '7px'}}>{item.user_name}</Box>
+                                </Box>
+                            </AsideListItem>
+                        ))}
                     </List>
                 </Box>
             </Drawer>
