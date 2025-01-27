@@ -60,3 +60,14 @@ export const searchByName = async (name) => {
         throw e;
     }
 }
+
+//根据分类标签查询视频
+export const getVideosByLabel = async (label) => {
+    try {
+        const response = await axios.get(`${backAddress}/v1/video/getVideosByLabel`, {params: {label: label}});
+        return response.data;
+    }catch (e) {
+        console.error("Video get failed:", e);
+        throw e;
+    }
+}
