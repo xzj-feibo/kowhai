@@ -71,14 +71,14 @@ const VideoItem = ({ video }) => {
                     borderRadius: '10px',
                     boxShadow: 2,
                     position: 'relative',
-                    width: 360,
-                    height: 220,
+                    width: 300,
+                    height: 200,
                 }}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
                 onClick={handlePlayClick}
             >
-                <Box sx={{position: 'relative', width: 360, height: 220, borderRadius: '10px'}}>
+                <Box sx={{position: 'relative', width: 335, height: 220, borderRadius: '10px'}}>
                     <video
                         ref={videoRef}
                         width="100%"

@@ -8,7 +8,6 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
       <CssBaseline/>
-
       <ThemeProvider theme={theme}>
           <AppRouter/>
       </ThemeProvider>

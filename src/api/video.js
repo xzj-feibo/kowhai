@@ -39,11 +39,23 @@ export const uploadVideo = async (userId, videoName, videoDuration, imgFile, vid
     }
 };
 
+//分页获取视频
 export const getVideos = async () => {
     try {
         const response = await axios.get(`${backAddress}/v1/videos`);
         return response.data
     }catch (e) {
+        console.error("Video get failed:", e);
+        throw e;
+    }
+}
+
+//根据视频名称模糊搜索
+export const searchByName = async (name) => {
+    try {
+        const response = await axios.get(`${backAddress}/v1/video/search`,{params:{name:name}});
+        return response.data;
+    }catch (e){
         console.error("Video get failed:", e);
         throw e;
     }
