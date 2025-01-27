@@ -1,9 +1,7 @@
 import VideoItem from '../../components/video/VideoItem';
 import {useEffect, useRef, useState} from "react";
 import {getVideos, searchByName} from "../../api/video";
-import {Box, Divider, Drawer, IconButton, InputBase, Paper} from "@mui/material";
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
+import {Box, Divider, Drawer, InputBase} from "@mui/material";
 
 export default function VideoList() {
     let [videos, setVideos] = useState([]);
@@ -54,7 +52,10 @@ export default function VideoList() {
                 }}
             >
                 <Box sx={{ padding: 2 }}>
-                    <h3>Menu</h3>
+                    <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
+                        <h3>Kowhai</h3>
+                        <img src='/imgs/kowhai.png' style={{ width: '50px', height: '40px', marginLeft: '8px' }} />
+                    </Box>
                     <Divider />
                     <p>Home</p>
                     <p>My Videos</p>
