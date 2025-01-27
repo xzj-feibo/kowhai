@@ -17,9 +17,6 @@ const theme = createTheme(
                 light: '#A3D8F5',     // lighter skyblue
                 dark: '#5A9BB3'       // darker skyblue
             },
-            background:{
-                paper: 'rgba(255,255,255,0.94)'
-            }
         },
         //排版
         typography: {
