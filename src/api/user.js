@@ -22,20 +22,20 @@ export const getUserData = async () => {
         return response.data.users;  // 返回响应中的数据
     } catch (error) {
         if (error.response.status !== 200){
-            // 如果是500错误，设置错误信息
-            alert(error.response.data.details);
+            return [error.response.status,error.response.data.err]
         }
     }
 };
 
-//创建用户
+//创建用户、注册
 export const createUser = async (userData) => {
     try{
         const response = await axios.post(`${backAddress}/user/create`, userData);
-        return [response.status,response.data.message]
+        const data = response.data;
+        return [response.status,data.msg]
     }catch (error) {
         if (error.response.status !== 200){
-            return [error.response.status, error.response.data.error]
+            return [error.response.status, error.response.data.err]
         }
     }
 }
@@ -47,8 +47,7 @@ export const getUserByName = async (name) => {
         return response.data
     }catch (error) {
         if (error.response.status !== 200){
-            // 如果是500错误，设置错误信息
-            alert(error.response.data.details);
+            return [error.response.status,error.response.data.err]
         }
     }
 }
@@ -57,11 +56,12 @@ export const getUserByName = async (name) => {
 export const login = async (userData) => {
     try {
         const response = await axios.post(`${backAddress}/user/login`, userData);
-        const token = "Bearer " + response.data.token;
-        return [response.status,response.data.message,token,response.data.user.id]
+        const data = response.data;
+        const token = "Bearer " + data.data.token;
+        return [response.status,data.msg,token,data.data.user.id]
     }catch (error){
         if (error.response.status !== 200){
-            return [error.response.status,error.response.data.details]
+            return [error.response.status,error.response.data.err]
         }
     }
 }
@@ -82,8 +82,9 @@ export const uploadAvatar = async (id, file) => {
         });
         return response.data; // 返回响应数据
     } catch (error) {
-        console.error('Error uploading avatar:', error);
-        throw error; // 如果发生错误抛出
+        if (error.response.status !== 200){
+            return [error.response.status,error.response.data.err]
+        }
     }
 };
 
@@ -91,9 +92,10 @@ export const uploadAvatar = async (id, file) => {
 export const getSubscriptions = async (userId) => {
     try {
         const response = await axios.get(`${backAddress}/v1/subscribe`, {params:{user_id:userId}});
-        return response.data
+        return response.data.data
     }catch (error){
-        console.error('Get Subscriptions Error:', error);
-        throw error; // 如果发生错误抛出
+        if (error.response.status !== 200){
+            return [error.response.status,error.response.data.err]
+        }
     }
 }

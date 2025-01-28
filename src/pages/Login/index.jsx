@@ -8,6 +8,7 @@ import LoginBox from "../../components/login/LoginBox";
 import theme from "../../theme";
 import {login} from "../../api/user";
 import {StyledButton, StyledLink, StyledTextField} from "./loginStyles";
+import NoticeBar from "../../components/util/NoticeBar";
 
 export default function Login() {
     // 使用 useState 来管理输入框的状态
@@ -53,10 +54,6 @@ export default function Login() {
         }
     }
 
-    // 关闭提示框
-    const handleCloseSnackbar = () => {
-        setOpenSnackbar(false);
-    };
     return (
         <Box>
             <LoginBox>
@@ -110,21 +107,7 @@ export default function Login() {
                     without an account?
                 </StyledLink>
             </LoginBox>
-            {/* Snackbar提示框 */}
-            <Snackbar
-                open={openSnackbar}
-                autoHideDuration={6000}
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}  // 顶部居中显示
-                onClose={handleCloseSnackbar}
-            >
-                <Alert
-                    onClose={handleCloseSnackbar}
-                    severity={snackbarSeverity}
-                    sx={{ width: '100%' }}
-                >
-                    {snackbarMessage}
-                </Alert>
-            </Snackbar>
+            <NoticeBar openSnackbar={openSnackbar} handleCloseSnackbar={() => setOpenSnackbar(false)} snackbarSeverity={snackbarSeverity} snackbarMessage={snackbarMessage}/>
         </Box>
     );
 }
