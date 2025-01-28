@@ -16,19 +16,19 @@ const theme = createTheme(
             //     default: 'black'
             // },
             primary: {                  //主色
-                main: '#0bde4e',        //主强度
-                light: '#0df557',       //轻
-                dark: '#06c242'         //深
+                main: '#4285F4', // Google Blue
+                light: '#82B1FF',
+                dark: '#3367D6',
             },
             secondary: {
-                main: '#87CEEB',      // skyblue
-                light: '#A3D8F5',     // lighter skyblue
-                dark: '#5A9BB3'       // darker skyblue
-            },
+                main: '#64B5F6',      // lighter blue, still complementary to Google Blue
+                light: '#BBDEFB',     // very light blue
+                dark: '#1E88E5'       // darker blue with a hint of greenish tone, balancing the Google Blue
+            }
         },
         //排版
         typography: {
-            loginRegisterTopicFont: 'JosefinSans, sans-serif',
+            loginRegisterTopicFont: 'Roboto, Arial, sans-serif',
         },
         //间距
         spacing: 4,
