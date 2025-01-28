@@ -24,6 +24,7 @@ import {useNavigate} from "react-router-dom";
 import {createUser} from "../../api/user";
 import {StyledButton, StyledTextField, TitleBox} from "./registerStyles";
 import * as PropTypes from "prop-types";
+import NoticeBar from "../../components/util/NoticeBar";
 
 TitleBox.propTypes = {children: PropTypes.node};
 export default function Register() {
@@ -103,11 +104,6 @@ export default function Register() {
             }
         }
     }
-
-    // 关闭提示框
-    const handleCloseSnackbar = () => {
-        setOpenSnackbar(false);
-    };
 
     return (
         <Box>
@@ -244,22 +240,7 @@ export default function Register() {
                     </Box>
                 </RegisterBox>
             </Slide>
-
-            {/* Snackbar提示框 */}
-            <Snackbar
-                open={openSnackbar}
-                autoHideDuration={6000}
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}  // 顶部居中显示
-                onClose={handleCloseSnackbar}
-            >
-                <Alert
-                    onClose={handleCloseSnackbar}
-                    severity={snackbarSeverity}
-                    sx={{ width: '100%' }}
-                >
-                    {snackbarMessage}
-                </Alert>
-            </Snackbar>
+            <NoticeBar openSnackbar={openSnackbar} handleCloseSnackbar={() => setOpenSnackbar(false)} snackbarSeverity={snackbarSeverity} snackbarMessage={snackbarMessage}/>
         </Box>
     );
 }

@@ -9,42 +9,52 @@ import {
     GridRowEditStopReasons,
     GridRowModes, GridToolbarContainer,
 } from '@mui/x-data-grid';
-import {Button, Paper, ThemeProvider} from "@mui/material";
+import {Box, Button, Paper, ThemeProvider} from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import theme from "../../theme";
+import NoticeBar from "../util/NoticeBar";
 
 export default function UserList() {
     const [users, setUsers] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    //提示框相关状态
+    const [openSnackbar, setOpenSnackbar] = useState(false); // 控制 Snackbar 是否打开
+    const [snackbarMessage, setSnackbarMessage] = useState(''); // 提示框的内容
+    const [snackbarSeverity, setSnackbarSeverity] = useState('error'); // 提示框的类型（error, success, warning, info）
     //分页对象
     const paginationModel = {page: 0, pageSize: 10}
     //行模式模型，表明表中哪些行处于编辑模式
     const [rowModesModel, setRowModesModel] = React.useState({});
 
+    //获取用户数据
+    const fetchUsers = async () => {
+        const data = await getUserData();
+        if (data[0] === 200){
+            data[2].map((d => {
+                d.last_login = new Date(d.last_login)
+                d.birth = new Date(d.birth)
+                d.audit.create_time = new Date(d.audit.create_time)
+                d.audit.update_time = new Date(d.audit.update_time)
+            }));
+            setSnackbarMessage(data[1]);
+            setSnackbarSeverity('success');
+            setOpenSnackbar(true);
+        }else{
+            // 如果登录失败，设置错误提示框
+            setSnackbarMessage(data[1]);
+            setSnackbarSeverity('error'); // 错误类型
+            setOpenSnackbar(true); // 打开提示框
+        }
+        return data;
+    };
     //副作用钩子：组件渲染后执行，第二个参数是依赖数组，当数组中元素值发生改变后执行
     useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const data = await getUserData();
-                data.map((d => {
-                    d.last_login = new Date(d.last_login)
-                    d.birth = new Date(d.birth)
-                    d.audit.create_time = new Date(d.audit.create_time)
-                    d.audit.update_time = new Date(d.audit.update_time)
-                }));
-                setUsers(data);
-            } catch (err) {
-                setError(err);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchUsers();
+    fetchUsers().then((data) => {
+        setUsers(data[2]);
+    });
     }, []);
 
     //表格上方工具栏的函数
@@ -227,12 +237,8 @@ export default function UserList() {
         }
     ]
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error fetching data: {error.message}</p>;
-
-
     return (
-        <ThemeProvider theme={theme}>
+        <Box>
             <Paper sx={{ height: theme.spacing(250), width: '100%', backgroundColor: 'black' }}>
                 <DataGrid
                     rows={users}
@@ -264,6 +270,7 @@ export default function UserList() {
                     }}
                 />
             </Paper>
-        </ThemeProvider>
+            <NoticeBar openSnackbar={openSnackbar} handleCloseSnackbar={() => setOpenSnackbar(false)} snackbarSeverity={snackbarSeverity} snackbarMessage={snackbarMessage}/>
+        </Box>
     );
 }

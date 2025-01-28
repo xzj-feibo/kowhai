@@ -19,7 +19,8 @@ const backAddress = process.env.REACT_APP_LOCAL_BACK_ADDRESS
 export const getUserData = async () => {
     try {
         const response = await axios.get(`${backAddress}/v1/users`);  // 发起 GET 请求到 '/v1/users' 端点
-        return response.data.users;  // 返回响应中的数据
+        const data = response.data;
+        return [response.status, data.msg, data.data]
     } catch (error) {
         if (error.response.status !== 200){
             return [error.response.status,error.response.data.err]
@@ -80,7 +81,8 @@ export const uploadAvatar = async (id, file) => {
                 'Content-Type': 'multipart/form-data', // 指定上传类型
             },
         });
-        return response.data; // 返回响应数据
+        const data = response.data;
+        return [response.status,data.msg,data.data]; // 返回响应数据
     } catch (error) {
         if (error.response.status !== 200){
             return [error.response.status,error.response.data.err]
@@ -92,7 +94,8 @@ export const uploadAvatar = async (id, file) => {
 export const getSubscriptions = async (userId) => {
     try {
         const response = await axios.get(`${backAddress}/v1/subscribe`, {params:{user_id:userId}});
-        return response.data.data
+        const data = response.data;
+        return [response.status,data.msg,data.data]; // 返回响应数据
     }catch (error){
         if (error.response.status !== 200){
             return [error.response.status,error.response.data.err]

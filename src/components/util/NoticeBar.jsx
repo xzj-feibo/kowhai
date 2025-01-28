@@ -4,12 +4,12 @@
 import {Alert, Snackbar} from "@mui/material";
 import React from "react";
 
-export default function NoticeBar({openSnackbar, handleCloseSnackbar, snackbarSeverity, snackbarMessage}) {
+export default function NoticeBar({openSnackbar, handleCloseSnackbar, snackbarSeverity, snackbarMessage, autoHideDuration=2000}) {
     return (
         <>
             <Snackbar
                 open={openSnackbar}
-                autoHideDuration={6000}
+                autoHideDuration={autoHideDuration}
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}  // 顶部居中显示
                 onClose={handleCloseSnackbar}
             >

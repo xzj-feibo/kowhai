@@ -16,7 +16,7 @@ axios.interceptors.request.use(
 
 const backAddress = process.env.REACT_APP_LOCAL_BACK_ADDRESS;
 
-export const uploadVideo = async (userId, videoName, videoDuration, imgFile, videoFile) => {
+export const uploadVideo = async (userId, videoName, videoDuration, imgFile, videoFile, label) => {
     const formData = new FormData();
 
     // 将各个字段添加到 FormData
@@ -25,6 +25,7 @@ export const uploadVideo = async (userId, videoName, videoDuration, imgFile, vid
     formData.append('videoDuration', videoDuration);
     formData.append('video', videoFile);  // 这是视频文件
     formData.append('image', imgFile);  // 这是封面文件
+    formData.append('label', label);  // 这是视频标签
 
     try {
         const response = await axios.post(`${backAddress}/v1/video/upload`, formData, {
@@ -32,10 +33,10 @@ export const uploadVideo = async (userId, videoName, videoDuration, imgFile, vid
                 'Content-Type': 'multipart/form-data'
             }
         });
-        return response.data;  // 返回响应数据
+        return [response.status, response.data.msg];  // 返回响应数据
     } catch (error) {
         if (error.response.status !== 200){
-            return [error.response.status,error.response.data.err]
+            return [error.response.status,error.response.data.msg]
         }
     }
 };
@@ -57,7 +58,8 @@ export const getVideos = async () => {
 export const searchByName = async (name) => {
     try {
         const response = await axios.get(`${backAddress}/v1/video/search`,{params:{name:name}});
-        return response.data;
+        const data = response.data;
+        return [response.status, data.msg, data.data];
     }catch (error){
         if (error.response.status !== 200){
             return [error.response.status,error.response.data.err]
