@@ -1,6 +1,7 @@
-import {useEffect, useRef, useState} from "react";
-import { Box, Button, Paper, TextField } from "@mui/material";
+import React, {useEffect, useRef, useState} from "react";
+import {Box, Button, FormControl, InputLabel, MenuItem, Paper, Select, TextField} from "@mui/material";
 import { uploadVideo } from "../../api/video";
+import NoticeBar from "../util/NoticeBar";
 
 export default function VideoUpload() {
     const [videoFile, setVideoFile] = useState(null);//视频文件
@@ -9,7 +10,16 @@ export default function VideoUpload() {
     const videoRef = useRef(null); // 引用 video 元素
     const imgRef = useRef(null); // 引用 img 元素
     const [duration, setDuration] = useState(null); // 用于存储视频时长
+    const [label, setLabel] = useState(null); // 用于存储视频标签
+    //视频类型
+    const videoTypes = ['音乐', '美食', '风景', '游戏', '鬼畜', '运动', '旅游', '其他']
 
+    //提示框相关状态
+    const [openSnackbar, setOpenSnackbar] = useState(false); // 控制 Snackbar 是否打开
+    const [snackbarMessage, setSnackbarMessage] = useState(''); // 提示框的内容
+    const [snackbarSeverity, setSnackbarSeverity] = useState('error'); // 提示框的类型（error, success, warning, info）
+    const [autoHideDuration, setAutoHideDuration] = useState(2000); //自动关闭时长
+    const [handleCloseSnackbar, setHandleCloseSnackbar] = useState(() => setOpenSnackbar(false)) //用于处理手动关闭
     const handleVideoFileChange = (e) => {
         const selectedVideoFile = e.target.files[0];
         setVideoFile(selectedVideoFile);
@@ -41,11 +51,30 @@ export default function VideoUpload() {
         if (videoName === ""){
             setVideoName(videoFile.name)
         }
-        // 使用视频名称和时长上传视频
-        const response = await uploadVideo(1, videoName, duration, imgFile, videoFile);
-        // console.log("Upload response:", response);
-    };
+        // 显示 "上传中" 提示，类型为 info，并禁用自动关闭
+        setSnackbarMessage("视频上传中...");
+        setSnackbarSeverity("info");
+        setOpenSnackbar(true); // 打开 Snackbar
+        setAutoHideDuration(null); // 禁止自动关闭
+        setHandleCloseSnackbar(()=>{}); //禁止点击关闭
 
+        // 使用视频名称和时长上传视频
+        const data = await uploadVideo(localStorage.getItem('userId'), videoName, duration, imgFile, videoFile, label);
+        setHandleCloseSnackbar(() => setOpenSnackbar(false))
+        if (data[0] === 200){
+            setSnackbarMessage(data[1]);
+            setSnackbarSeverity('success');
+        }else{
+            // 如果登录失败，设置错误提示框
+            setSnackbarMessage(data[1]);
+            setSnackbarSeverity('error'); // 错误类型
+            setOpenSnackbar(true); // 打开提示框
+        }
+    };
+    //处理视频标签改变
+    const handleChangeLabel = (event)=> {
+        setLabel(event.target.value);
+    }
 
     return (
         <Paper sx={{
@@ -107,6 +136,22 @@ export default function VideoUpload() {
                 </Box>
             </Box>
 
+            <FormControl>
+                <InputLabel id="label">视频类型</InputLabel>
+                <Select
+                    labelId="label"
+                    id="label"
+                    value={label}
+                    label="Label"
+                    onChange={handleChangeLabel}
+                    sx={{width: '120px'}}
+                >
+                    {videoTypes.map((item, index) => (
+                        <MenuItem value={index+1}>{item}</MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
+
             <TextField
                 sx={{margin: "15px"}}
                 label="Input your video name"
@@ -116,6 +161,7 @@ export default function VideoUpload() {
             <Button onClick={handleUploadClick} variant="contained" color="primary">
                 Upload
             </Button>
+            <NoticeBar openSnackbar={openSnackbar} handleCloseSnackbar={handleCloseSnackbar} snackbarSeverity={snackbarSeverity} snackbarMessage={snackbarMessage} autoHideDuration={autoHideDuration}/>
         </Paper>
     );
 }

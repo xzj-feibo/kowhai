@@ -59,11 +59,6 @@ export default function VideoList() {
 
     const inputRef = useRef("");
 
-    //提示框相关状态
-    const [openSnackbar, setOpenSnackbar] = useState(false); // 控制 Snackbar 是否打开
-    const [snackbarMessage, setSnackbarMessage] = useState(''); // 提示框的内容
-    const [snackbarSeverity, setSnackbarSeverity] = useState('error'); // 提示框的类型（error, success, warning, info）
-
     //获取全部视频
     const fetchVideos = async () => {
         return await getVideos(); // Fetch video data
@@ -83,7 +78,7 @@ export default function VideoList() {
             setVideos(videos); // Update video data
         });
         fetchSubscriptions(localStorage.getItem("userId")).then((data) => {
-            setSubscriptions(data);
+            setSubscriptions(data[2]);
         })
     }, []); // Empty array means it runs once on component mount
 
@@ -273,9 +268,6 @@ export default function VideoList() {
                     ))}
                 </Box>
             </Box>
-
-            {/* Snackbar提示框 */}
-            <NoticeBar openSnackbar={openSnackbar} handleCloseSnackbar={() => setOpenSnackbar(false)} snackbarSeverity={snackbarSeverity} snackbarMessage={snackbarMessage}/>
         </Box>
     );
 }
