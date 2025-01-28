@@ -1,93 +1,111 @@
-/**
- * 用户详情页
- */
-
-import React from "react";
+import React, { useState } from "react";
 import {
-    AppBar,
-    Toolbar,
+    Avatar,
+    Button,
+    Tabs,
+    Tab,
+    Card,
+    CardContent,
     Typography,
+    TextField,
     IconButton,
     Box,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    Drawer,
-    ListItemButton
 } from "@mui/material";
-import SettingsIcon from "@mui/icons-material/Settings";
-import PersonIcon from "@mui/icons-material/Person";
-import UserAvatar from "../../components/user/UserAvatar";
+import EditIcon from "@mui/icons-material/Edit";
+import ImageIcon from "@mui/icons-material/Image";
+import PollIcon from "@mui/icons-material/Poll";
+import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 
-export default function UserProfile() {
+const ProfilePage = () => {
+    const [tabIndex, setTabIndex] = useState(0);
+
     return (
-        <Box sx={{display: "flex", height: "100vh", width: "100vw"}}>
-            {/* Navigation Drawer */}
-            <Drawer
-                variant="permanent"
-                sx={{
-                    width: 240,
-                    flexShrink: 0,
-                    [`& .MuiDrawer-paper`]: {width: 240, boxSizing: "border-box"},
-                    backgroundColor: 'black',
-                    color: 'white',
-                }}
-            >
-                <Toolbar/>
-                <Box sx={{overflow: "auto", backgroundColor: 'black', color: 'white'}}>
-                    <List>
-                        <ListItem>
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    <PersonIcon/>
-                                </ListItemIcon>
-                                <ListItemText primary="Personal Info"/>
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    <SettingsIcon/>
-                                </ListItemIcon>
-                                <ListItemText primary="Settings"/>
-                            </ListItemButton>
-                        </ListItem>
-                    </List>
-                </Box>
-            </Drawer>
-
-            {/* Main Content */}
-            <Box sx={{flexGrow: 1, bgcolor: "background.default", p: 3}}>
-                {/* Top App Bar */}
-                <AppBar position="fixed" sx={{
-                    height: '80px',
-                    backgroundColor: 'black',
-                    color: 'white',
-                    zIndex: (theme) => theme.zIndex.drawer + 1
-                }}>
-                    <Toolbar>
-                        <Typography variant="h6" noWrap sx={{flexGrow: 1}}>
-                            User Home
+        <Box sx={{ backgroundColor: "#121212", color: "#fff", minHeight: "100vh", p: 3, display: "flex", justifyContent: "center" }}>
+            <Box sx={{ width: "45%" }}>
+                {/* 用户信息 */}
+                <Box display="flex" alignItems="center" gap={2}>
+                    <Avatar sx={{ width: 150, height: 150, bgcolor: "#4caf50" }} />
+                    <Box>
+                        <Typography variant="h4">徐子轩</Typography>
+                        <Typography variant="subtitle1" sx={{ color: "#aaa" }}>
+                            @徐子轩-q6h
                         </Typography>
-                        <IconButton edge="end" color="inherit">
-                            <UserAvatar src="https://image-10001577.image.myqcloud.com/upload/3/20170412/1492007452202.jpg" avatarSize={54} size={70}/>
-                        </IconButton>
-                    </Toolbar>
-                </AppBar>
+                    </Box>
+                </Box>
 
-                {/* Spacer for AppBar */}
-                <Toolbar/>
+                {/* 按钮 */}
+                <Box mt={2} display="flex" gap={2}>
+                    <Button variant="contained" sx={{ bgcolor: "#555", color: "#fff", borderRadius: "20px" }}>
+                        自定义频道
+                    </Button>
+                    <Button variant="contained" sx={{ bgcolor: "#555", color: "#fff", borderRadius: "20px" }}>
+                        管理视频
+                    </Button>
+                </Box>
 
-                {/* Page Content */}
-                <Typography variant="h4" gutterBottom>
-                    Welcome to your Home Page!
-                </Typography>
-                <Typography variant="body1">
-                    Here you can navigate to your personal information or adjust your settings using the menu on the
-                    left.
-                </Typography>
+                {/* 发表帖子输入框 */}
+                <Card sx={{ mt: 3, p: 2, bgcolor: "#1e1e1e", width: "70%" }}>
+                    <TextField
+                        fullWidth
+                        placeholder="和粉丝分享最新动态"
+                        variant="outlined"
+                        multiline
+                        minRows={4} // 增加默认高度
+                        InputProps={{ style: { color: "#fff" } }}
+                        sx={{
+                            input: { color: "#fff" },
+                            bgcolor: "#333",
+                            borderRadius: 1,
+                            width: "100%",
+                            "& .MuiOutlinedInput-notchedOutline": { border: "none" },
+                            "&:hover .MuiOutlinedInput-notchedOutline": { border: "none" },
+                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": { border: "none" }
+                        }}
+                    />
+                    <Box display="flex" mt={1} justifyContent="space-between">
+                        <Box>
+                            <IconButton color="primary">
+                                <ImageIcon />
+                            </IconButton>
+                            <IconButton color="primary">
+                                <PollIcon />
+                            </IconButton>
+                            <IconButton color="primary">
+                                <VideoLibraryIcon />
+                            </IconButton>
+                        </Box>
+                        <Button variant="contained" color="primary" disabled>
+                            发布
+                        </Button>
+                    </Box>
+                </Card>
+
+                {/* Tabs 选项卡 */}
+                <Tabs
+                    value={tabIndex}
+                    onChange={(e, newValue) => setTabIndex(newValue)}
+                    textColor="inherit"
+                    indicatorColor="primary"
+                    sx={{ mt: 3 }}
+                >
+                    <Tab label="已发布" />
+                    <Tab label="已定时" />
+                    <Tab label="已归档" />
+                </Tabs>
+
+                {/* 空页面 */}
+                <Box textAlign="center" mt={5}>
+                    <EditIcon sx={{ fontSize: 50, color: "#555" }} />
+                    <Typography variant="h6" sx={{ mt: 1, color: "#aaa" }}>
+                        发布帖子
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: "#777" }}>
+                        你发布的帖子会显示在这里，整个社区都能看到
+                    </Typography>
+                </Box>
             </Box>
         </Box>
     );
 };
+
+export default ProfilePage;
