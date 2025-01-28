@@ -33,9 +33,10 @@ export const uploadVideo = async (userId, videoName, videoDuration, imgFile, vid
             }
         });
         return response.data;  // 返回响应数据
-    } catch (e) {
-        console.error("Video upload failed:", e);
-        throw e;  // 如果上传失败，抛出错误
+    } catch (error) {
+        if (error.response.status !== 200){
+            return [error.response.status,error.response.data.err]
+        }
     }
 };
 
@@ -43,10 +44,12 @@ export const uploadVideo = async (userId, videoName, videoDuration, imgFile, vid
 export const getVideos = async () => {
     try {
         const response = await axios.get(`${backAddress}/v1/videos`);
-        return response.data
-    }catch (e) {
-        console.error("Video get failed:", e);
-        throw e;
+        const data = response.data
+        return [response.status, data.msg, data.data.videoList]
+    }catch (error) {
+        if (error.response.status !== 200){
+            return [error.response.status,error.response.data.err]
+        }
     }
 }
 
@@ -55,9 +58,10 @@ export const searchByName = async (name) => {
     try {
         const response = await axios.get(`${backAddress}/v1/video/search`,{params:{name:name}});
         return response.data;
-    }catch (e){
-        console.error("Video get failed:", e);
-        throw e;
+    }catch (error){
+        if (error.response.status !== 200){
+            return [error.response.status,error.response.data.err]
+        }
     }
 }
 
@@ -65,9 +69,11 @@ export const searchByName = async (name) => {
 export const getVideosByLabel = async (label) => {
     try {
         const response = await axios.get(`${backAddress}/v1/video/getVideosByLabel`, {params: {label: label}});
-        return response.data;
-    }catch (e) {
-        console.error("Video get failed:", e);
-        throw e;
+        const data = response.data;
+        return [response.status, data.msg, data.data.videoList];
+    }catch (error) {
+        if (error.response.status !== 200){
+            return [error.response.status,error.response.data.err]
+        }
     }
 }

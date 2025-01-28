@@ -244,6 +244,22 @@ export default function Register() {
                     </Box>
                 </RegisterBox>
             </Slide>
+
+            {/* Snackbar提示框 */}
+            <Snackbar
+                open={openSnackbar}
+                autoHideDuration={6000}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}  // 顶部居中显示
+                onClose={handleCloseSnackbar}
+            >
+                <Alert
+                    onClose={handleCloseSnackbar}
+                    severity={snackbarSeverity}
+                    sx={{ width: '100%' }}
+                >
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
         </Box>
     );
 }

@@ -7,7 +7,7 @@ import Hls from 'hls.js';
 import UserAvatar from "../user/UserAvatar";
 
 const VideoItem = ({ video }) => {
-    const { name, image, link, id, createTime, user_name } = video;
+    const { name, image, link, id, avatar, createTime, user_name } = video;
     const [isHovered, setIsHovered] = useState(false);
     const navigate = useNavigate();
     const videoRef = useRef(null); // Reference to video element
@@ -78,7 +78,7 @@ const VideoItem = ({ video }) => {
                 onMouseLeave={() => setIsHovered(false)}
                 onClick={handlePlayClick}
             >
-                <Box sx={{position: 'relative', width: 335, height: 220, borderRadius: '10px'}}>
+                <Box sx={{position: 'relative', width: 335, height: 200, borderRadius: '10px'}}>
                     <video
                         ref={videoRef}
                         width="100%"
@@ -112,9 +112,9 @@ const VideoItem = ({ video }) => {
                     )}
                 </Box>
             </Paper>
-            <Box sx={{padding: 2, color: 'white', borderRadius: 2, display: 'inline-block'}}>
+            <Box sx={{padding: 2, color: 'white', borderRadius: 2, display: 'inline-block', marginTop: '5px'}}>
                 <Box sx={{display: 'flex', alignItems: 'center'}}>
-                    <UserAvatar src="https://image-10001577.image.myqcloud.com/upload/3/20170412/1492007452202.jpg"
+                    <UserAvatar src={avatar}
                                 avatarSize={40} size={50}/>
                     <Box sx={{ display: 'flex', flexDirection: 'column', marginLeft: 1 }}>
                         <Typography variant="h7" sx={{ fontWeight: 'bold' }} noWrap>

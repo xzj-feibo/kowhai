@@ -7,6 +7,14 @@ const theme = createTheme(
     {
         //调色板
         palette: {
+            // //文本
+            // text: {
+            //     primary: 'white'
+            // },
+            // //背景
+            // background: {
+            //     default: 'black'
+            // },
             primary: {                  //主色
                 main: '#0bde4e',        //主强度
                 light: '#0df557',       //轻

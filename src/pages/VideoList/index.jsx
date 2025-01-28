@@ -2,9 +2,10 @@
  * 视频列表，系统首页
  */
 import VideoItem from '../../components/video/VideoItem';
-import {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {getVideos, getVideosByLabel, searchByName} from "../../api/video";
 import {
+    Alert,
     Avatar,
     Box,
     Divider,
@@ -12,7 +13,7 @@ import {
     InputBase,
     List,
     ListItemIcon,
-    ListItemText
+    ListItemText, Snackbar
 } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home"
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
@@ -32,6 +33,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import {AsideListItem, TopButton, TopListItem} from "./VideoList";
 import {getSubscriptions} from "../../api/user";
 import {type} from "@testing-library/user-event/dist/type";
+import NoticeBar from "../../components/util/NoticeBar";
 
 export default function VideoList() {
     let [videos, setVideos] = useState([]);
@@ -57,7 +59,12 @@ export default function VideoList() {
 
     const inputRef = useRef("");
 
-//获取全部视频
+    //提示框相关状态
+    const [openSnackbar, setOpenSnackbar] = useState(false); // 控制 Snackbar 是否打开
+    const [snackbarMessage, setSnackbarMessage] = useState(''); // 提示框的内容
+    const [snackbarSeverity, setSnackbarSeverity] = useState('error'); // 提示框的类型（error, success, warning, info）
+
+    //获取全部视频
     const fetchVideos = async () => {
         return await getVideos(); // Fetch video data
     };
@@ -69,14 +76,14 @@ export default function VideoList() {
 
     useEffect(() => {
         fetchVideos().then((data) => {
-            const videos = data.data.map((video) => ({
+            const videos = data[2].map((video) => ({
                 ...video, // Copy other fields of video
                 createTime: video.audit.create_time, // Extract and add createTime field
             }));
             setVideos(videos); // Update video data
         });
         fetchSubscriptions(localStorage.getItem("userId")).then((data) => {
-            setSubscriptions(data.data);
+            setSubscriptions(data);
         })
     }, []); // Empty array means it runs once on component mount
 
@@ -91,12 +98,18 @@ export default function VideoList() {
     const handleGetVideosByLabel = async (label) => {
         setTopIsSelected(label);
         if (label === 0){
-           fetchVideos();
+            fetchVideos().then((data) => {
+                const videos = data[2].map((video) => ({
+                    ...video, // Copy other fields of video
+                    createTime: video.audit.create_time, // Extract and add createTime field
+                }));
+                setVideos(videos); // Update video data
+            });
         }
         else{
             try {
                 const data = await getVideosByLabel(label);
-                const videos = data.data.map((video) => ({
+                const videos = data[2].map((video) => ({
                     ...video, // Copy other fields of video
                     createTime: video.audit.create_time, // Extract and add createTime field
                 }));
@@ -260,7 +273,9 @@ export default function VideoList() {
                     ))}
                 </Box>
             </Box>
-        </Box>
 
+            {/* Snackbar提示框 */}
+            <NoticeBar openSnackbar={openSnackbar} handleCloseSnackbar={() => setOpenSnackbar(false)} snackbarSeverity={snackbarSeverity} snackbarMessage={snackbarMessage}/>
+        </Box>
     );
 }
