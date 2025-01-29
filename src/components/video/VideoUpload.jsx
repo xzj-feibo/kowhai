@@ -8,10 +8,11 @@ import {
     MenuItem,
     Paper,
     Select,
-    TextField,
+    TextField, Typography,
 } from "@mui/material";
 import { uploadVideo } from "../../api/video";
 import NoticeBar from "../util/NoticeBar";
+import FileUploadBox from "../util/FileUploadBox";
 
 export default function VideoUpload() {
     const [videoFile, setVideoFile] = useState(null);
@@ -19,39 +20,26 @@ export default function VideoUpload() {
     const [videoName, setVideoName] = useState("");
     const videoRef = useRef(null);
     const imgRef = useRef(null);
-    const [duration, setDuration] = useState(null);
+    // const [duration, setDuration] = useState(null);
     const [label, setLabel] = useState(null);
     const videoTypes = ["音乐", "美食", "风景", "游戏", "鬼畜", "运动", "旅游", "其他"];
 
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
     const [snackbarSeverity, setSnackbarSeverity] = useState("error");
-    const [autoHideDuration, setAutoHideDuration] = useState(2000);
+    const [autoHideDuration, setAutoHideDuration] = useState(5000);
     const [handleCloseSnackbar, setHandleCloseSnackbar] = useState(() =>
         setOpenSnackbar(false)
     );
 
-    const handleVideoFileChange = (e) => {
-        const selectedVideoFile = e.target.files[0];
-        setVideoFile(selectedVideoFile);
-        const videoUrl = URL.createObjectURL(selectedVideoFile);
-        if (videoRef.current) {
-            const videoElement = videoRef.current;
-            videoElement.src = videoUrl;
-            videoElement.onloadedmetadata = () => {
-                setDuration(videoElement.duration);
-            };
+    const handleFile = (selectedFile, i) => {
+        if (i === 0){
+            setVideoFile(selectedFile);
+        }else{
+            setImgFile(selectedFile)
         }
-    };
 
-    const handleImgFileChange = (e) => {
-        const selectedImgFile = e.target.files[0];
-        setImgFile(selectedImgFile);
-        const imgUrl = URL.createObjectURL(selectedImgFile);
-        if (imgRef.current) {
-            imgRef.current.src = imgUrl;
-        }
-    };
+    }
 
     const handleUploadClick = async () => {
         if (videoName === "") {
@@ -65,7 +53,6 @@ export default function VideoUpload() {
         const data = await uploadVideo(
             localStorage.getItem("userId"),
             videoName,
-            duration,
             imgFile,
             videoFile,
             label
@@ -92,43 +79,12 @@ export default function VideoUpload() {
                     {/* 左上角 - 视频 */}
                     <Grid item xs={6} sx={{ display: "flex", flexDirection: "column" }}>
                         {/*视频组件*/}
-                        <Box component='video'
-                        ref={videoRef}
-                        controls
-                        accept="video/mp4"
-                        sx={{width: "100%", height: '250px', borderRadius: "16px", marginBottom: '10px'}}/>
-                        <input
-                            id="upload-video-file"
-                            type="file"
-                            accept="video/*"
-                            style={{ display: "none" }}
-                            onChange={handleVideoFileChange}
-                        />
-                        <label htmlFor="upload-video-file">
-                            <Button variant="contained" component="span">
-                                选择视频文件
-                            </Button>
-                        </label>
-                        <p>Selected file: {videoFile === null ? "未选择文件" : videoFile.name}</p>
-                        {duration && <p>Video Duration: {duration.toFixed(2)} seconds</p>}
+                        <FileUploadBox ref={videoRef} handleFile={handleFile} type={0} name="请上传视频文件"/>
                     </Grid>
 
                     {/* 右上角 - 图片 */}
                     <Grid item xs={6}>
-                        <Box component='img' ref={imgRef}
-                             sx={{width: "100%", borderRadius: "16px", height: '250px', marginBottom: '5px'}}/>
-                        <input
-                            id="upload-img-file"
-                            type="file"
-                            accept="image/*"
-                            style={{display: "none"}}
-                            onChange={handleImgFileChange}
-                        />
-                        <label htmlFor="upload-img-file">
-                            <Button variant="contained" component="span">
-                                选择视频封面图片
-                            </Button>
-                        </label>
+                        <FileUploadBox ref={imgRef} handleFile={handleFile} type={1} name="请上传视频封面"/>
                     </Grid>
 
                     {/* 左下角 - 视频类型和视频名称 */}
