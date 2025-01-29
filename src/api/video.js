@@ -16,13 +16,12 @@ axios.interceptors.request.use(
 
 const backAddress = process.env.REACT_APP_LOCAL_BACK_ADDRESS;
 
-export const uploadVideo = async (userId, videoName, videoDuration, imgFile, videoFile, label) => {
+export const uploadVideo = async (userId, videoName, imgFile, videoFile, label) => {
     const formData = new FormData();
 
     // 将各个字段添加到 FormData
     formData.append('userId', userId);
     formData.append('videoName', videoName);
-    formData.append('videoDuration', videoDuration);
     formData.append('video', videoFile);  // 这是视频文件
     formData.append('image', imgFile);  // 这是封面文件
     formData.append('label', label);  // 这是视频标签
