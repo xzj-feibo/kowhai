@@ -69,9 +69,19 @@ const VideoPlayer = ({ src, image }) => {
         videoElement.addEventListener('fullscreenchange', handleFullscreenChange);
         document.addEventListener('fullscreenchange', handleFullscreenChange);
 
+        //添加鼠标悬浮时键盘（快进/回退）监听事件
+        videoElement.addEventListener('mouseenter', ()=>{
+            window.addEventListener('keydown', handleKeydown);
+        })
         return () => {
             videoElement.removeEventListener('progress', handleProgress);
             videoElement.removeEventListener('timeupdate', handleTimeUpdate);
+            // 移除键盘事件监听器
+            videoElement.addEventListener('mouseleave', () => {
+                // 移除键盘事件监听器
+                window.removeEventListener('keydown', handleKeydown);
+            });
+            videoElement.removeEventListener('keydown', handleKeydown);
             document.removeEventListener('fullscreenchange', handleFullscreenChange);
             if (hls) {
                 hls.destroy();
@@ -90,6 +100,20 @@ const VideoPlayer = ({ src, image }) => {
             }, 200);
         }
     };
+
+    function handleKeydown(event) {
+        if (event.key === 'ArrowRight') {
+            // 快进5秒
+            const videoElement = videoRef.current;
+            videoElement.currentTime = Math.min(videoElement.duration, videoElement.currentTime + 5);;
+
+        }
+        if (event.key === 'ArrowLeft') {
+            // 回退5秒
+            const videoElement = videoRef.current;
+            videoElement.currentTime = Math.min(videoElement.duration, videoElement.currentTime - 5);;
+        }
+    }
 
     const handleMouseEnterProgressBar = () => {
         setProgressBarHeight('4px');
@@ -214,6 +238,7 @@ const VideoPlayer = ({ src, image }) => {
             <Paper
                 elevation={3}
                 sx={{
+                    borderRadius: '20px',
                     ...(isMiniMode ? miniModeStyles : {}),
                 }}
             >
