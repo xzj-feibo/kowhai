@@ -8,6 +8,7 @@ export const StyledVideo = styled('video')({
     width: '100%',
     height: '100%',
     borderRadius: '20px',
+    boxShadow: '0 0 200px 35px rgba(255,255,255,0.35)',
     zIndex: 1,
     cursor: 'pointer'
 })
