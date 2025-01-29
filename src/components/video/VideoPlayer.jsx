@@ -214,7 +214,6 @@ const VideoPlayer = ({ src, image }) => {
             <Paper
                 elevation={3}
                 sx={{
-                    backgroundColor: 'black',
                     ...(isMiniMode ? miniModeStyles : {}),
                 }}
             >

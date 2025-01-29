@@ -11,6 +11,7 @@ import VideoList from "../pages/VideoList";
 import UserList from "../components/user/UserList";
 import VideoUpload from "../components/video/VideoUpload";
 import VideoTagComment from "../components/video/VideoTagComment";
+import Layout from "../components/layout/Layout";
 
 export default function AppRouter(){
     //鉴权逻辑
@@ -29,12 +30,14 @@ export default function AppRouter(){
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/login3" element={<Login3/>}/>
                 <Route path="/register" element={<Register/>}/>
-                <Route path="/" element={<PrivateRoute><VideoList/></PrivateRoute>}/>
-                <Route path="/comment" element={<VideoTagComment><VideoList/></VideoTagComment>}/>
-                <Route path="/user/:userId" element={<PrivateRoute><UserProfile/></PrivateRoute>}/>
-                <Route path="/users" element={<PrivateRoute><UserList/></PrivateRoute>}/>
+                <Route path="/" element={<Layout/>}>
+                    <Route path="/" element={<PrivateRoute><VideoList/></PrivateRoute>}/>
+                    <Route path="/comment" element={<VideoTagComment><VideoList/></VideoTagComment>}/>
+                    <Route path="/user/:userId" element={<PrivateRoute><UserProfile/></PrivateRoute>}/>
+                    <Route path="/video/upload" element={<PrivateRoute><VideoUpload/></PrivateRoute>}/>
+                </Route>
                 <Route path="/video/detail/:videoId" element={<PrivateRoute><VideoDetail/></PrivateRoute>}/>
-                <Route path="/video/upload" element={<PrivateRoute><VideoUpload/></PrivateRoute>}/>
+                <Route path="/users" element={<PrivateRoute><UserList/></PrivateRoute>}/>
                 <Route path="*" element={<NotFound/>}/>
             </Routes>
         </Router>
