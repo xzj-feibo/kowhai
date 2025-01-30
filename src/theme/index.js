@@ -35,6 +35,13 @@ const theme = createTheme(
         shape: {
             borderRadius: 8,
         },
+        components: {
+            MuiGrid: {
+                defaultProps: {
+                    columns: 10 //修改基数为10列
+                }
+            }
+        }
     }
 )
 
