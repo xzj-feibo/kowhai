@@ -3,9 +3,10 @@
  */
 import {styled} from '@mui/material'
 import {Box} from '@mui/material'
+import theme from "../../theme";
 
 //使用styled创建自定义的Box，LoginBox
-const LoginBox = styled(Box)(({theme})=>({
+const LoginBox = styled(Box)(()=>({
     display: 'flex',        // 启用弹性布局
     position: 'absolute',    // 使用绝对定位
     top: '20vh',             // 距离顶部 20% 的位置，即 3/5 高度
