@@ -91,11 +91,7 @@ export default function Register() {
                 setSnackbarMessage(data[1]);
                 setSnackbarSeverity('success');
                 setOpenSnackbar(true);
-
-                // 使用 setTimeout 延迟跳转，确保 Snackbar 显示后再跳转
-                setTimeout(() => {
-                    navigate('/login');
-                }, 2000); // 2000 毫秒（即 2 秒）后跳转
+                navigate('/login');
             }else{
                 // 如果登录失败，设置错误提示框
                 setSnackbarMessage(data[1]);

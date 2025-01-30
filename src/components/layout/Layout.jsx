@@ -129,7 +129,7 @@ export default function Layout() {
                                 <ArrowForwardIosIcon sx={{fontSize: '16px'}}/>
                             </ListItemIcon>
                         </AsideListItem>
-                        {subscriptions.map((item) => (
+                        {subscriptions && subscriptions.map((item) => (
                             <AsideListItem button>
                                 <Box sx={{marginRight: '7px', display: 'flex', alignItems: 'center'}}>
                                     <Avatar src={item.avatar} sx={{width: '20px', height: '20px'}}/>
