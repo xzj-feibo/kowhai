@@ -63,12 +63,11 @@ const VideoPlayer = ({ src, image }) => {
 
         videoElement.addEventListener('timeupdate', handleTimeUpdate);
 
-        videoElement.autoPlay = true;
         const handleFullscreenChange = () => {
             setIsFullscreen(!!document.fullscreenElement);
         };
         //监听全屏事件
-        videoElement.addEventListener('fullscreenchange', handleFullscreenChange);
+        // videoElement.addEventListener('fullscreenchange', handleFullscreenChange);
         document.addEventListener('fullscreenchange', handleFullscreenChange);
 
         //添加鼠标悬浮时键盘（快进/回退）监听事件
@@ -87,7 +86,7 @@ const VideoPlayer = ({ src, image }) => {
             };
 
             // 每 5 秒绘制一次
-            var interval = setInterval(drawFrame, 5000);
+            setInterval(drawFrame, 5000);
         })
         return () => {
             videoElement.removeEventListener('progress', handleProgress);
