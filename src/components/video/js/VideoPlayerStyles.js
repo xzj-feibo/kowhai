@@ -7,7 +7,7 @@ export const StyledVideo = styled('video')({
     left: 0,
     width: '100%',
     height: '100%',
-    borderRadius: '20px',
+    borderRadius: '15px',
     boxShadow: '0 0 200px 35px rgba(255,255,255,0.35)',
     zIndex: 1,
     cursor: 'pointer'
@@ -48,17 +48,13 @@ export const StyledSlider = styled(Slider)(() => ({
     position: 'absolute',
     bottom: '-13px',
     zIndex: 3,
-    // '& .MuiSlider-thumb': {
-    //     width: '10px', // 调整滑块大小
-    //     height: '10px',
-    //     display: 'flex',
-    //     justifyContent: 'center',
-    //     alignItems: 'center',
-    //     '& svg': {
-    //         width: '100%',
-    //         height: '100%',
-    //     }
-    // },
+    '& .MuiSlider-thumb': {
+        width: '15px', // 调整滑块大小
+        height: '15px',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
     '& .MuiSlider-rail': {
         backgroundColor: 'transparent', // 设置未滑动部分的颜色
     },

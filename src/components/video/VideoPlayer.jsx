@@ -14,6 +14,7 @@ import {
 
 const VideoPlayer = ({ src, image }) => {
     const videoRef = useRef(null);
+    const canvasRef = useRef(null);
     const [progress, setProgress] = useState(0);
     const [loadedProgress, setLoadedProgress] = useState(0);
     const [isPlaying, setIsPlaying] = useState(true);
@@ -66,12 +67,27 @@ const VideoPlayer = ({ src, image }) => {
         const handleFullscreenChange = () => {
             setIsFullscreen(!!document.fullscreenElement);
         };
+        //监听全屏事件
         videoElement.addEventListener('fullscreenchange', handleFullscreenChange);
         document.addEventListener('fullscreenchange', handleFullscreenChange);
 
         //添加鼠标悬浮时键盘（快进/回退）监听事件
         videoElement.addEventListener('mouseenter', ()=>{
             window.addEventListener('keydown', handleKeydown);
+        })
+
+        //
+        videoElement.addEventListener('seeked', () => {
+            const canvasElement = canvasRef.current;
+            const ctx = canvasElement.getContext('2d');
+            const drawFrame = () => {
+                if (!videoElement.paused && !videoElement.ended) {
+                    ctx.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+                }
+            };
+
+            // 每 5 秒绘制一次
+            var interval = setInterval(drawFrame, 5000);
         })
         return () => {
             videoElement.removeEventListener('progress', handleProgress);
@@ -115,14 +131,17 @@ const VideoPlayer = ({ src, image }) => {
         }
     }
 
+    //鼠标悬浮在进度条上高度变大
     const handleMouseEnterProgressBar = () => {
         setProgressBarHeight('4px');
     };
 
+    //鼠标离开进度条其高度变小
     const handleMouseLeaveProgressBar = () => {
         setProgressBarHeight('3px');
     };
 
+    //切换播放/暂停
     const togglePlayPause = () => {
         const videoElement = videoRef.current;
         if (isPlaying) {
@@ -133,6 +152,7 @@ const VideoPlayer = ({ src, image }) => {
         setIsPlaying(!isPlaying);
     };
 
+    //改变视频音量
     const handleVolumeChange = (event, newValue) => {
         setVolume(newValue);
         videoRef.current.volume = newValue;
@@ -141,6 +161,7 @@ const VideoPlayer = ({ src, image }) => {
         }
     };
 
+    //切换全屏
     const toggleFullscreen = () => {
         const videoElement = videoRef.current;
         if (isFullscreen) {
@@ -158,6 +179,7 @@ const VideoPlayer = ({ src, image }) => {
         }
     };
 
+    //切换静音
     const toggleMute = () => {
         const newMutedState = !isMuted;
         setIsMuted(newMutedState);
@@ -170,20 +192,24 @@ const VideoPlayer = ({ src, image }) => {
         }
     };
 
+    //鼠标悬浮在音量控件上音量条的行为改变
     const handleMouseEnterVolume = () => {
         setShowVolumeSlider(true);
         setSliderWidth(150);
     };
 
+    //鼠标离开音量控件上音量条的行为改变
     const handleMouseLeaveVolume = () => {
         setSliderWidth(0);
         setShowVolumeSlider(false);
     };
 
+    //点击video标签时视频的播放/暂停
     const handleVideoClick = () => {
         togglePlayPause();
     };
 
+    //点击进度条
     const handleProgressBarClick = (event) => {
         const rect = event.currentTarget.getBoundingClientRect();
         const offsetX = event.clientX - rect.left;
@@ -193,28 +219,17 @@ const VideoPlayer = ({ src, image }) => {
         setProgress(newProgress);
     };
 
+    //切换画中画模式
     const toggleMiniMode = () => {
         setIsMiniMode(!isMiniMode);
     };
 
+    //视频播放结束回调
     const handleEnd = () => {
         const videoElement = videoRef.current;
         setIsPlaying(false);
         videoElement.currentTime = 0;
     }
-
-    const miniModeStyles = {
-        position: 'fixed',
-        bottom: 20,
-        right: 20,
-        width: 380,
-        height: 250,
-        zIndex: 1000,
-        borderRadius: '15px',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-        cursor: 'pointer',
-        transition: 'all 0.3s ease',
-    };
 
     // 格式化时间（mm:ss）
     const formatTime = (seconds) => {
@@ -233,12 +248,26 @@ const VideoPlayer = ({ src, image }) => {
         return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
     };
 
+    //画中画模式样式
+    const miniModeStyles = {
+        position: 'fixed',
+        bottom: 20,
+        right: 20,
+        width: 380,
+        height: 250,
+        zIndex: 1000,
+        borderRadius: '15px',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+        cursor: 'pointer',
+        transition: 'all 0.3s ease',
+    };
+
     return (
-        <Box sx={{maxWidth: 1200, margin: '80px 80px auto', padding: 2}}>
+        <Box sx={{width: '1270px', margin: '80px 80px auto 150px'}}>
             <Paper
                 elevation={3}
                 sx={{
-                    borderRadius: '20px',
+                    borderRadius: '15px',
                     ...(isMiniMode ? miniModeStyles : {}),
                 }}
             >
@@ -259,6 +288,7 @@ const VideoPlayer = ({ src, image }) => {
                         onEnded={handleEnd}
                         onClick={handleVideoClick}
                     />
+
                     {showControls && (
                         <>
                             <ProcessBar onClick={handleProgressBarClick}
@@ -337,6 +367,9 @@ const VideoPlayer = ({ src, image }) => {
                         </>
                     )}
                 </Box>
+
+                {/*预览图*/}
+                <canvas ref={canvasRef} style={{width: "280px", height: "140px", zIndex: 200, borderRadius:'8px'}}/>
             </Paper>
         </Box>
     );

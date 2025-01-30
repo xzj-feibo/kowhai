@@ -32,6 +32,7 @@ export default function VideoUpload() {
         setOpenSnackbar(false)
     );
 
+    //绑定选择的文件
     const handleFile = (selectedFile, i) => {
         if (i === 0){
             setVideoFile(selectedFile);
@@ -41,6 +42,7 @@ export default function VideoUpload() {
 
     }
 
+    //点击上传
     const handleUploadClick = async () => {
         if (videoName === "") {
             setVideoName(videoFile.name);
@@ -68,6 +70,7 @@ export default function VideoUpload() {
         }
     };
 
+    //选择视频类型回调
     const handleChangeLabel = (event) => {
         setLabel(event.target.value);
     };
