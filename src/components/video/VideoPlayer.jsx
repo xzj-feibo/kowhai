@@ -12,14 +12,15 @@ import {
     StyledVideo, VolumeBox, VolumeSlider,
 } from './js/VideoPlayerStyles'
 
+
 const VideoPlayer = ({ src, image }) => {
     const videoRef = useRef(null);
+    const videoContainerRef = useRef(null);
     const canvasRef = useRef(null);
     const [progress, setProgress] = useState(0);
     const [loadedProgress, setLoadedProgress] = useState(0);
     const [isPlaying, setIsPlaying] = useState(true);
     const [volume, setVolume] = useState(1);
-    const [isFullscreen, setIsFullscreen] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
     const [showVolumeSlider, setShowVolumeSlider] = useState(false);
     const [sliderWidth, setSliderWidth] = useState(0);
@@ -63,13 +64,6 @@ const VideoPlayer = ({ src, image }) => {
 
         videoElement.addEventListener('timeupdate', handleTimeUpdate);
 
-        const handleFullscreenChange = () => {
-            setIsFullscreen(!!document.fullscreenElement);
-        };
-        //监听全屏事件
-        // videoElement.addEventListener('fullscreenchange', handleFullscreenChange);
-        document.addEventListener('fullscreenchange', handleFullscreenChange);
-
         //添加鼠标悬浮时键盘（快进/回退）监听事件
         videoElement.addEventListener('mouseenter', ()=>{
             window.addEventListener('keydown', handleKeydown);
@@ -97,7 +91,6 @@ const VideoPlayer = ({ src, image }) => {
                 window.removeEventListener('keydown', handleKeydown);
             });
             videoElement.removeEventListener('keydown', handleKeydown);
-            document.removeEventListener('fullscreenchange', handleFullscreenChange);
             if (hls) {
                 hls.destroy();
             }
@@ -162,21 +155,23 @@ const VideoPlayer = ({ src, image }) => {
 
     //切换全屏
     const toggleFullscreen = () => {
-        const videoElement = videoRef.current;
-        if (isFullscreen) {
-            if (document.fullscreenElement) {
-                document.exitFullscreen().catch((err) => {
-                    console.error("Error exiting fullscreen:", err);
-                });
-            }
+        const videoContainerElement = videoContainerRef.current;
+
+        if (document.fullscreenElement) {
+            // 退出全屏
+            document.exitFullscreen().catch((err) => {
+                console.error("Error exiting fullscreen:", err);
+            });
         } else {
-            if (videoElement.requestFullscreen) {
-                videoElement.requestFullscreen().catch((err) => {
+            // 进入全屏
+            if (videoContainerElement?.requestFullscreen) {
+                videoContainerElement.requestFullscreen().catch((err) => {
                     console.error("Error entering fullscreen:", err);
                 });
             }
         }
     };
+
 
     //切换静音
     const toggleMute = () => {
@@ -276,6 +271,7 @@ const VideoPlayer = ({ src, image }) => {
                     height: 0,
                     ...(isMiniMode && {paddingBottom: '0', height: '100%'}),
                 }}
+                     ref={videoContainerRef}
                      onMouseEnter={handleMouseEnterVideo}
                      onMouseLeave={handleMouseLeaveVideo}>
 
@@ -354,7 +350,7 @@ const VideoPlayer = ({ src, image }) => {
 
                             <FullScreenBox>
                                 <IconButton onClick={toggleFullscreen} sx={{color: 'white'}}>
-                                    {isFullscreen ? <FullscreenExitIcon/> : <FullscreenIcon/>}
+                                    {document.fullscreenElement ? <FullscreenExitIcon/> : <FullscreenIcon/>}
                                 </IconButton>
                             </FullScreenBox>
 
