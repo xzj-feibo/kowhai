@@ -42,6 +42,7 @@ export default function Login() {
                 localStorage.setItem("token", data[2])
                 localStorage.setItem("userId", data[3].id)
                 localStorage.setItem("avatar", data[3].avatar)
+                localStorage.setItem("username", data[3].user_name)
                 setOpenSnackbar(true);
                 // 使用 setTimeout 延迟跳转，确保 Snackbar 显示后再跳转
                 setTimeout(() => {
