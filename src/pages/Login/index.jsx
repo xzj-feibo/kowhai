@@ -38,7 +38,6 @@ export default function Login() {
             if (data[0] === 200){
                 setSnackbarMessage(data[1]);
                 setSnackbarSeverity('success');
-                debugger;
                 localStorage.setItem("token", data[2])
                 localStorage.setItem("userId", data[3].id)
                 localStorage.setItem("avatar", data[3].avatar)

@@ -15,28 +15,32 @@ import EditIcon from "@mui/icons-material/Edit";
 import ImageIcon from "@mui/icons-material/Image";
 import PollIcon from "@mui/icons-material/Poll";
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
+import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
     const [tabIndex, setTabIndex] = useState(0);
+    const navigate = useNavigate(); //获取路由跳转函数
 
     return (
         <Box sx={{ backgroundColor: "#121212", color: "#fff", minHeight: "100vh", p: 3, display: "flex", justifyContent: "center" }}>
             <Box sx={{ width: "45%" }}>
                 {/* 用户信息 */}
                 <Box display="flex" alignItems="center" gap={2}>
-                    <Avatar sx={{ width: 150, height: 150, bgcolor: "#4caf50" }} />
+                    <Avatar sx={{ width: 150, height: 150, bgcolor: "#4caf50" }} src={localStorage.getItem("avatar")} />
                     <Box>
-                        <Typography variant="h4">徐子轩</Typography>
+                        <Typography variant="h4">{localStorage.getItem("username")}</Typography>
                         <Typography variant="subtitle1" sx={{ color: "#aaa" }}>
-                            @徐子轩-q6h
+                            @{localStorage.getItem("username")}
                         </Typography>
                     </Box>
                 </Box>
 
                 {/* 按钮 */}
                 <Box mt={2} display="flex" gap={2}>
-                    <Button variant="contained" sx={{ bgcolor: "#555", color: "#fff", borderRadius: "20px" }}>
-                        自定义频道
+                    <Button variant="contained" sx={{ bgcolor: "#555", color: "#fff", borderRadius: "20px" }}
+                    onClick={() => navigate("/video/upload")}
+                    >
+                        上传视频
                     </Button>
                     <Button variant="contained" sx={{ bgcolor: "#555", color: "#fff", borderRadius: "20px" }}>
                         管理视频
