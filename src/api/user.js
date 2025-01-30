@@ -93,7 +93,6 @@ export const uploadAvatar = async (id, file) => {
 //查询用户订阅
 export const getSubscriptions = async (userId) => {
     try {
-        debugger;
         const response = await axios.get(`${backAddress}/v1/subscribe`, {params:{user_id:userId}});
         const data = response.data;
         return [response.status,data.msg,data.data]; // 返回响应数据

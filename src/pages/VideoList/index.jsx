@@ -7,7 +7,7 @@ import {getVideos, getVideosByLabel, searchByName} from "../../api/video";
 import {
     Avatar,
     Box,
-    Divider,
+    Divider, Grid,
     InputBase,
 } from "@mui/material";
 
@@ -78,69 +78,61 @@ export default function VideoList() {
     }
 
     return (
-        <Box sx={{ display: 'flex' }}>
-            {/* 主内容 */}
-            <Box
-                sx={{
-                    flexGrow: 1, // 主内容占满剩余空间
-                    padding: 2,  // 内边距
-                    overflowX: 'auto', // 允许横向滚动
-                }}
-            >
-                {/* 搜索栏 */}
+        <Box
+            sx={{
+                flexGrow: 1, // 主内容占满剩余空间
+                padding: 2,  // 内边距
+            }}
+        >
+            {/* 搜索栏 */}
+            <Box sx={{
+                display: 'flex',
+                width: '100%',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '15px'
+            }}>
                 <Box sx={{
-                    display: 'flex',
-                    width: '100%',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginBottom: '15px'
+                    border: '1px, solid, #787878',
+                    borderRadius: '60px',
+                    paddingLeft: '15px',
+                    width: '600px',
                 }}>
-                    <Box sx={{
-                        border: '1px, solid, #787878',
-                        borderRadius: '60px',
-                        paddingLeft: '15px',
-                        width: '600px',
-                    }}>
-                        <InputBase sx={{color: 'white', width: '100%'}} placeholder='搜索'>
-                            <Divider orientation='vertical' flexItem/>
-                        </InputBase>
-                    </Box>
-                    <Avatar src={localStorage.getItem('avatar')} sx={{position: 'relative', left: '550px'}} onClick={handleClickAvatar}/>
+                    <InputBase sx={{color: 'white', width: '100%'}} placeholder='搜索'>
+                        <Divider orientation='vertical' flexItem/>
+                    </InputBase>
                 </Box>
+                <Avatar src={localStorage.getItem('avatar')} sx={{position: 'relative', left: '550px'}} onClick={handleClickAvatar}/>
+            </Box>
 
-                {/*顶部菜单列表*/}
-                <Box>
-                    {topMenuItems.map((item, index) => (
-                        <TopButton
-                            isSelected={topIsSelected === index}
-                            onClick={() => handleGetVideosByLabel(index)}>
-                            {item}
-                        </TopButton>
-                    ))}
-                </Box>
+            {/*顶部菜单列表*/}
+            <Box>
+                {topMenuItems.map((item, index) => (
+                    <TopButton
+                        isSelected={topIsSelected === index}
+                        onClick={() => handleGetVideosByLabel(index)}>
+                        {item}
+                    </TopButton>
+                ))}
+            </Box>
 
-                {/* 视频列表 */}
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        gap: 2,
-                        overflow: 'auto',
-                    }}
-                >
-                    {videos.map((video) => (
+            {/* 视频列表 */}
+            {/*Grid以12列为基础，里面的数字代表占满多少列*/}
+            <Grid container spacing={2} sx={{ padding: 2 }}>
+                {videos.map((video) => (
+                    <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={video.id}>
                         <Box
-                            key={video.id}
                             sx={{
-                                flex: '1 1 calc(20% - 8px)', // 每项占20%宽度
-                                maxWidth: 'calc(20% - 8px)', // 保证宽度一致
+                                width: '100%', // 保证盒子填满网格
+                                aspectRatio: '16 / 9', // 保持16:9比例
+                                height: 'auto', // 自动调整高度
                             }}
                         >
                             <VideoItem video={video} />
                         </Box>
-                    ))}
-                </Box>
-            </Box>
+                    </Grid>
+                ))}
+            </Grid>
         </Box>
     );
 }
