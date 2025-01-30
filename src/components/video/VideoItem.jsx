@@ -18,6 +18,7 @@ const VideoItem = ({ video }) => {
     const timeAgo = formatDistanceToNow(parsedTime, { addSuffix: true });
 
 
+    //点击video标签跳转
     const handlePlayClick = (e) => {
         e.stopPropagation();
         // 使用查询参数将视频链接传递给 VideoDetail 页面

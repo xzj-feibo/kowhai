@@ -5,35 +5,15 @@ import VideoItem from '../../components/video/VideoItem';
 import React, {useEffect, useRef, useState} from "react";
 import {getVideos, getVideosByLabel, searchByName} from "../../api/video";
 import {
-    Alert,
     Avatar,
     Box,
     Divider,
-    Drawer,
     InputBase,
-    List,
-    ListItemIcon,
-    ListItemText, Snackbar
 } from "@mui/material";
-import HomeIcon from "@mui/icons-material/Home"
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-import SubscriptionIcon from "@mui/icons-material/Subscriptions"
-import SubscriptionsOutlinedIcon from '@mui/icons-material/SubscriptionsOutlined';
-import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
-import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
-import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined';
-import HistoryIcon from '@mui/icons-material/History';
-import PlaylistPlayOutlinedIcon from '@mui/icons-material/PlaylistPlayOutlined';
-import PlaylistPlayRoundedIcon from '@mui/icons-material/PlaylistPlayRounded';
-import VideoLibraryOutlinedIcon from '@mui/icons-material/VideoLibraryOutlined';
-import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
-import WorkHistoryOutlinedIcon from '@mui/icons-material/WorkHistoryOutlined';
-import WorkHistoryIcon from '@mui/icons-material/WorkHistory';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import {AsideListItem, TopButton, TopListItem} from "./VideoList";
-import {getSubscriptions} from "../../api/user";
-import {type} from "@testing-library/user-event/dist/type";
-import NoticeBar from "../../components/util/NoticeBar";
+
+import {TopButton} from "./VideoList";
+import {useNavigate} from "react-router-dom";
+
 
 export default function VideoList() {
     let [videos, setVideos] = useState([]);
@@ -43,6 +23,7 @@ export default function VideoList() {
 
     const inputRef = useRef("");
 
+    const navigate = useNavigate();
     //获取全部视频
     const fetchVideos = async () => {
         return await getVideos(); // Fetch video data
@@ -66,6 +47,7 @@ export default function VideoList() {
         //todo
     }
 
+    //按视频类型查询api
     const handleGetVideosByLabel = async (label) => {
         setTopIsSelected(label);
         if (label === 0){
@@ -89,6 +71,10 @@ export default function VideoList() {
                 console.error("Failed to fetch videos:", error);
             }
         }
+    }
+
+    function handleClickAvatar() {
+        navigate(`/user/${localStorage.getItem('userId')}`);
     }
 
     return (
@@ -119,6 +105,7 @@ export default function VideoList() {
                             <Divider orientation='vertical' flexItem/>
                         </InputBase>
                     </Box>
+                    <Avatar src={localStorage.getItem('avatar')} sx={{position: 'relative', left: '550px'}} onClick={handleClickAvatar}/>
                 </Box>
 
                 {/*顶部菜单列表*/}

@@ -59,7 +59,7 @@ export const login = async (userData) => {
         const response = await axios.post(`${backAddress}/user/login`, userData);
         const data = response.data;
         const token = "Bearer " + data.data.token;
-        return [response.status,data.msg,token,data.data.user.id]
+        return [response.status,data.msg,token,data.data.user]
     }catch (error){
         if (error.response.status !== 200){
             return [error.response.status,error.response.data.err]
