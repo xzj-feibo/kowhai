@@ -16,7 +16,8 @@ import {
 const VideoPlayer = ({ src, image }) => {
     const videoRef = useRef(null);
     const videoContainerRef = useRef(null);
-    const canvasRef = useRef(null);
+    const processBarRef = useRef(null);
+    const previewCanvasRef = useRef(null);
     const [progress, setProgress] = useState(0);
     const [loadedProgress, setLoadedProgress] = useState(0);
     const [isPlaying, setIsPlaying] = useState(true);
@@ -51,9 +52,7 @@ const VideoPlayer = ({ src, image }) => {
                 setLoadedProgress((bufferedEnd / duration) * 100);
             }
         };
-
         videoElement.addEventListener('progress', handleProgress);
-
         const handleTimeUpdate = () => {
             const currentTime = videoElement.currentTime;
             const duration = videoElement.duration;
@@ -61,27 +60,73 @@ const VideoPlayer = ({ src, image }) => {
                 setProgress((currentTime / duration) * 100);
             }
         };
-
         videoElement.addEventListener('timeupdate', handleTimeUpdate);
 
         //添加鼠标悬浮时键盘（快进/回退）监听事件
-        videoElement.addEventListener('mouseenter', ()=>{
+        videoElement.addEventListener('mouseenter', () => {
             window.addEventListener('keydown', handleKeydown);
         })
 
-        //
-        videoElement.addEventListener('seeked', () => {
-            const canvasElement = canvasRef.current;
-            const ctx = canvasElement.getContext('2d');
-            const drawFrame = () => {
-                if (!videoElement.paused && !videoElement.ended) {
-                    ctx.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
-                }
-            };
+        //预览图实现
+        const processBarElement = processBarRef.current;
+        const previewCanvasElement = previewCanvasRef.current;
+        const ctx = previewCanvasElement.getContext('2d');
+        //创建隐藏的视频副本
+        const hiddenVideoElement = document.createElement('video');
+        hiddenVideoElement.src = videoElement.src;
+        if (Hls.isSupported()) {
+            hls = new Hls();
+            hls.loadSource(src);
+            hls.attachMedia(hiddenVideoElement);
+        } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+            hiddenVideoElement.src = src;
+        }
+        hiddenVideoElement.muted = true;
+        hiddenVideoElement.style.display = 'none';
+        document.body.appendChild(hiddenVideoElement);
 
-            // 每 5 秒绘制一次
-            setInterval(drawFrame, 5000);
-        })
+        let lastSegment = -1; //上一次绘制的段编号
+        //监听进度条鼠标移动事件
+        processBarElement.addEventListener('mousemove', (event) => {
+            const rect = processBarElement.getBoundingClientRect();
+            const mouseX = event.clientX - rect.left;
+            const percent = mouseX / processBarElement.offsetWidth;
+            const totalDuration = hiddenVideoElement.duration;
+            //计算5秒间隔的起始时间
+            const segment = Math.floor((percent * totalDuration) / 5); //当前5秒段编号
+            const previewTime = segment * 5 + 1; //每段使用第一秒为预览图
+            if (!isNaN(previewTime) && segment !== lastSegment) {
+                lastSegment = segment; //记录当前段编号，避免重复绘制
+                drawPreviewFrame(previewTime, mouseX);
+            } else {
+                moveCanvas(mouseX);
+            }
+        });
+
+        //绘制视频帧到Canvas
+        function drawPreviewFrame(time, mouseX) {
+            previewCanvasElement.style.left = `${mouseX - previewCanvasElement.width / 2}px`;
+            previewCanvasElement.style.display = 'block';
+            //确保隐藏视频跳转并加载完毕
+            hiddenVideoElement.currentTime = time;
+            hiddenVideoElement.addEventListener('seeked', function onSeeked() {
+                ctx.clearRect(0, 0, previewCanvasElement.width, previewCanvasElement.height);
+                ctx.drawImage(hiddenVideoElement, 0, 0, previewCanvasElement.width, previewCanvasElement.height);
+                hiddenVideoElement.removeEventListener('seeked', onSeeked);
+            })
+        }
+
+        //仅移动Canvas位置，不重新绘制
+        function moveCanvas(mouseX) {
+            previewCanvasElement.style.left = `${mouseX - previewCanvasElement.width / 2}px`;
+            previewCanvasElement.style.display = 'block';
+        }
+        //隐藏canvas
+        processBarElement.addEventListener('mouseleave', () => {
+            previewCanvasElement.style.display = 'none';
+            lastSegment = -1;//重复段编号
+        });
+
         return () => {
             videoElement.removeEventListener('progress', handleProgress);
             videoElement.removeEventListener('timeupdate', handleTimeUpdate);
@@ -286,7 +331,8 @@ const VideoPlayer = ({ src, image }) => {
 
                     {showControls && (
                         <>
-                            <ProcessBar onClick={handleProgressBarClick}
+                            <ProcessBar ref={processBarRef}
+                                        onClick={handleProgressBarClick}
                                         onMouseEnter={handleMouseEnterProgressBar}
                                         onMouseLeave={handleMouseLeaveProgressBar}
                             >
@@ -312,6 +358,10 @@ const VideoPlayer = ({ src, image }) => {
                                     />
                                 </InProcessBar>
                             </ProcessBar>
+
+                            <canvas ref={previewCanvasRef} width={260} height={150}
+                                    style={{position: 'absolute', bottom: '100px', left: '0',borderRadius:'5px',display:'none',
+                                        background: 'black', border: '1px solid #ccc', zIndex: 100}}/>
 
                             <PlayingBox>
                                 <IconButton onClick={togglePlayPause} sx={{color: 'white'}}>
@@ -362,9 +412,6 @@ const VideoPlayer = ({ src, image }) => {
                         </>
                     )}
                 </Box>
-
-                {/*预览图*/}
-                <canvas ref={canvasRef} style={{width: "280px", height: "140px", zIndex: 200, borderRadius:'8px'}}/>
             </Paper>
         </Box>
     );
