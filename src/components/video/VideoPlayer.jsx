@@ -47,7 +47,7 @@ const VideoPlayer = ({ src, image }) => {
     //视频总时长
     const duration = videoRef.current ? videoRef.current.duration : 0;
     //倍速列表
-    const speedList = [2.0, 1.5, 1.25, 1.0, 0.75, 0.5];
+    const speedList = ['2.0', '1.5', '1.25', '1.0', '0.75', '0.5'];
 
     useEffect(() => {
         const videoElement = videoRef.current;
