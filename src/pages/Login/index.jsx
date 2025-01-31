@@ -4,10 +4,9 @@
 import React, {useState} from 'react';
 import {Snackbar, Alert, Box, styled} from '@mui/material';
 import {useNavigate} from "react-router-dom"
-import LoginBox from "../../components/login/LoginBox";
 import theme from "../../theme";
 import {login} from "../../api/user";
-import {StyledButton, StyledLink, StyledTextField} from "./loginStyles";
+import {LoginBox, StyledButton, StyledLink, StyledTextField} from "./loginStyles";
 import NoticeBar from "../../components/util/NoticeBar";
 
 export default function Login() {
@@ -57,7 +56,10 @@ export default function Login() {
     }
 
     return (
-        <Box>
+        <Box sx={{display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100vh'}}>
             <LoginBox>
                 <h2 style={{fontFamily: theme.typography.loginRegisterTopicFont}}>Login to Kowhai</h2>
                 {/* 用户名输入框 */}

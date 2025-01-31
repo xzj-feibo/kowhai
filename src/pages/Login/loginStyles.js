@@ -1,6 +1,21 @@
-import {Button, keyframes, styled, TextField} from "@mui/material";
+import {Box, Button, keyframes, styled, TextField} from "@mui/material";
 import theme from "../../theme";
 import {Link} from "react-router-dom";
+
+//使用styled创建自定义的Box，LoginBox
+export const LoginBox = styled(Box)(() => ({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: theme.spacing(5),
+    gap: theme.spacing(4),
+    backgroundColor: theme.palette.background.paper,
+    width: '40%',
+    maxWidth: theme.spacing(100),
+    borderRadius: theme.spacing(2.5),
+    boxShadow: theme.shadows[3],
+}));
 
 export const StyledTextField = styled(TextField)({
     '& .MuiOutlinedInput-root': { // 定位到 OutlinedInput

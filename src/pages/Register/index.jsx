@@ -13,16 +13,14 @@ import {
     StepLabel,
     Slide,
     IconButton,
-    Box,
-    Snackbar, Alert
+    Box
 } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import theme from "../../theme";
-import RegisterBox from "../../components/register/RegisterBox";
 import BirthdayInput from "../../components/user/BirthdayInput";
 import {useNavigate} from "react-router-dom";
 import {createUser} from "../../api/user";
-import {StyledButton, StyledTextField, TitleBox} from "./registerStyles";
+import {RegisterBox, StyledButton, StyledTextField, TitleBox} from "./registerStyles";
 import * as PropTypes from "prop-types";
 import NoticeBar from "../../components/util/NoticeBar";
 
