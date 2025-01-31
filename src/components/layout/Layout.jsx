@@ -20,9 +20,10 @@ import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 import VideoLibraryOutlinedIcon from "@mui/icons-material/VideoLibraryOutlined";
 import WorkHistoryOutlinedIcon from "@mui/icons-material/WorkHistoryOutlined";
-import {Outlet} from "react-router-dom";
+import {Outlet, useNavigate} from "react-router-dom";
 
 export default function Layout() {
+    const navigate = useNavigate();
     //判断侧边栏选项选中
     const [asideIsSelected, setAsideIsSelected] = useState(0)
     //侧边栏选项菜单
@@ -53,6 +54,9 @@ export default function Layout() {
     //处理侧边栏选项被点击事件
     function handleListItemClick(id) {
         setAsideIsSelected(id);
+        if (id === 0){
+            navigate('/')
+        }
     }
     return (
         <Box sx={{width: '100vw', height: '100vh'}}>

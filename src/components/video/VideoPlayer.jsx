@@ -1,6 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Hls from 'hls.js';
-import {Box, Paper, IconButton, SliderThumb} from '@mui/material';
+import {
+    Box,
+    Paper,
+    IconButton,
+    SliderThumb,
+    InputLabel,
+    Select,
+    MenuItem,
+    FormControl,
+    Typography, List, ListItemButton, ListItemText
+} from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
@@ -11,6 +21,7 @@ import {
     PIPBox, PlayingBox, ProcessBar, StyledSlider,
     StyledVideo, VolumeBox, VolumeSlider,
 } from './js/VideoPlayerStyles'
+import theme from "../../theme";
 
 
 const VideoPlayer = ({ src, image }) => {
@@ -18,7 +29,10 @@ const VideoPlayer = ({ src, image }) => {
     const videoContainerRef = useRef(null);
     const processBarRef = useRef(null);
     const previewCanvasRef = useRef(null);
+    const speedSelectBoxRef = useRef(null);
+    const speedTextRef = useRef(null);
     const [progress, setProgress] = useState(0);
+    const [speed, setSpeed] = useState(1);
     const [loadedProgress, setLoadedProgress] = useState(0);
     const [isPlaying, setIsPlaying] = useState(true);
     const [volume, setVolume] = useState(1);
@@ -32,7 +46,8 @@ const VideoPlayer = ({ src, image }) => {
     const currentTime = videoRef.current ? videoRef.current.currentTime : 0;
     //视频总时长
     const duration = videoRef.current ? videoRef.current.duration : 0;
-
+    //倍速列表
+    const speedList = [2.0, 1.5, 1.25, 1.0, 0.75, 0.5];
 
     useEffect(() => {
         const videoElement = videoRef.current;
@@ -44,7 +59,6 @@ const VideoPlayer = ({ src, image }) => {
         } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
             videoElement.src = src;
         }
-
         const handleProgress = () => {
             const bufferedEnd = videoElement.buffered.length ? videoElement.buffered.end(0) : 0;
             const duration = videoElement.duration;
@@ -301,6 +315,13 @@ const VideoPlayer = ({ src, image }) => {
         transition: 'all 0.3s ease',
     };
 
+    function handleSpeedListItemClick(event, index) {
+        const selectedSpeed = speedList[index]; // 直接获取当前点击的速度
+        setSpeed(selectedSpeed); // 更新状态以同步显示
+        const videoElement = videoRef.current;
+        videoElement.playbackRate = selectedSpeed; // 立即设置播放倍速
+    }
+
     return (
         <Box sx={{width: '1270px', margin: '80px 80px auto 150px'}}>
             <Paper
@@ -390,12 +411,62 @@ const VideoPlayer = ({ src, image }) => {
                             <Box sx={{
                                 position: 'absolute',
                                 bottom: '23px',
-                                right: '110px',
+                                right: '150px',
                                 color: 'white',
                                 fontSize: '14px',
                                 zIndex: 4
                             }}>
                                 {formatTime(currentTime)} / {formatTime(duration)}
+                            </Box>
+
+                            {/*倍速*/}
+                            <Box  onMouseLeave={()=>{
+                                const speedSelectedBoxRefElement = speedSelectBoxRef.current;
+                                speedSelectedBoxRefElement.style.display = 'none';
+                                 }}>
+                                <List ref={speedSelectBoxRef} component="nav" aria-label="secondary mailbox folder" sx={{
+                                    position: 'absolute',
+                                    bottom: '45px',
+                                    right: '88px',
+                                    width: '70px', // 设置宽度
+                                    backgroundColor: '#333', // 浅黑色背景
+                                    color: 'white', // 文字颜色（避免与背景混淆）
+                                    zIndex: 4,
+                                    display: 'none'
+                                }}>
+                                    {speedList.map((item, index) => (
+                                        <ListItemButton
+                                            selected={speed === speedList[index]}
+                                            onClick={(event) => handleSpeedListItemClick(event, index)}
+                                            sx={{
+                                                '&.Mui-selected': {
+                                                    backgroundColor: '#444', // 选中时背景色
+                                                    color: theme.palette.primary.main,
+                                                },
+                                                '&:hover': {
+                                                    backgroundColor: '#555', // 悬停时背景色
+                                                    color: theme.palette.primary.main,
+                                                }
+                                            }}
+                                        >
+                                            <ListItemText primary={<>{item}x</>} />
+                                        </ListItemButton>
+                                    ))}
+                                </List>
+                                <Box ref={speedTextRef} sx={{position: 'absolute',
+                                    bottom: '22px',
+                                    right: '105px',
+                                    color: 'white',
+                                    zIndex: 4}}
+                                    onMouseEnter={()=>{
+                                        const speedSelectedBoxRefElement = speedSelectBoxRef.current;
+                                        speedSelectedBoxRefElement.style.display = 'block';
+                                        const speedTextRefElement = speedTextRef.current;
+                                        speedTextRefElement.style.cursor = 'pointer'
+                                    }}
+                                >
+                                    <Typography variant='p'>倍速</Typography>
+                                </Box>
                             </Box>
 
                             <FullScreenBox>
