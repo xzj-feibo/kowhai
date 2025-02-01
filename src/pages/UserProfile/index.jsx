@@ -5,7 +5,6 @@ import {
     Tabs,
     Tab,
     Card,
-    CardContent,
     Typography,
     TextField,
     IconButton,
@@ -16,14 +15,16 @@ import ImageIcon from "@mui/icons-material/Image";
 import PollIcon from "@mui/icons-material/Poll";
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import { useNavigate } from "react-router-dom";
+import AppBarLayout from "../../layout/AppBarLayout";
 
 const ProfilePage = () => {
     const [tabIndex, setTabIndex] = useState(0);
     const navigate = useNavigate(); //获取路由跳转函数
 
     return (
-        <Box sx={{ backgroundColor: "#121212", color: "#fff", minHeight: "100vh", p: 3, display: "flex", justifyContent: "center" }}>
-            <Box sx={{ width: "45%" }}>
+        <Box sx={{ color: "#fff", minHeight: "100vh", p: 3, display: "flex", justifyContent: "center" }}>
+            <AppBarLayout/>
+            <Box sx={{ width: "45%", marginTop: '4%' }}>
                 {/* 用户信息 */}
                 <Box display="flex" alignItems="center" gap={2}>
                     <Avatar sx={{ width: 150, height: 150, bgcolor: "#4caf50" }} src={localStorage.getItem("avatar")} />

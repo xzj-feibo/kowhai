@@ -13,6 +13,7 @@ import {
 
 import {TopButton} from "./VideoList";
 import {useNavigate} from "react-router-dom";
+import AppBarLayout from "../../layout/AppBarLayout";
 
 
 export default function VideoList() {
@@ -84,41 +85,34 @@ export default function VideoList() {
                 padding: 2,  // 内边距
             }}
         >
-            {/* 搜索栏 */}
-            <Box sx={{
-                display: 'flex',
-                width: '100%',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: '15px'
-            }}>
-                <Box sx={{
-                    border: '1px, solid, #787878',
-                    borderRadius: '60px',
-                    paddingLeft: '15px',
-                    width: '600px',
-                }}>
-                    <InputBase sx={{color: 'white', width: '100%'}} placeholder='搜索'>
-                        <Divider orientation='vertical' flexItem/>
-                    </InputBase>
-                </Box>
-                <Avatar src={localStorage.getItem('avatar')} sx={{position: 'relative', left: '550px'}} onClick={handleClickAvatar}/>
-            </Box>
+            <AppBarLayout/>
 
-            {/*顶部菜单列表*/}
-            <Box>
-                {topMenuItems.map((item, index) => (
-                    <TopButton
-                        isSelected={topIsSelected === index}
-                        onClick={() => handleGetVideosByLabel(index)}>
-                        {item}
-                    </TopButton>
-                ))}
+            {/* 搜索框下方的标签栏，固定在顶部 */}
+            <Box sx={{ position: 'sticky', top: '60px', zIndex: 2 }}>
+                <Box sx={{
+                    backgroundColor: 'black',
+                    display: 'flex',
+                    justifyContent: 'left',
+                    padding: '10px 0',
+                    position: 'sticky',
+                    top: 0,
+                    zIndex: 1,
+                }}>
+                    {topMenuItems.map((item, index) => (
+                        <TopButton
+                            key={index}
+                            isSelected={topIsSelected === index}
+                            onClick={() => handleGetVideosByLabel(index)}
+                            sx={{ margin: '0 10px' }}
+                        >
+                            {item}
+                        </TopButton>
+                    ))}
+                </Box>
             </Box>
 
             {/* 视频列表 */}
-            {/*Grid以12列为基础，里面的数字代表占满多少列*/}
-            <Grid container spacing={2} sx={{ padding: 2 }}>
+            <Grid container spacing={2} sx={{ padding: 2, marginTop: '50px' }}>
                 {videos.map((video) => (
                     <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={video.id}>
                         <Box
