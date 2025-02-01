@@ -11,7 +11,7 @@ import VideoList from "../pages/VideoList";
 import UserList from "../components/user/UserList";
 import VideoUpload from "../components/video/VideoUpload";
 import VideoTagComment from "../components/video/VideoTagComment";
-import Layout from "../components/layout/Layout";
+import SidebarLayout from "../layout/SidebarLayout";
 
 export default function AppRouter(){
     //鉴权逻辑
@@ -30,7 +30,7 @@ export default function AppRouter(){
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/login3" element={<Login3/>}/>
                 <Route path="/register" element={<Register/>}/>
-                <Route path="/" element={<Layout/>}>
+                <Route path="/" element={<SidebarLayout/>}>
                     <Route path="/" element={<PrivateRoute><VideoList/></PrivateRoute>}/>
                     <Route path="/comment" element={<VideoTagComment><VideoList/></VideoTagComment>}/>
                     <Route path="/user/:userId" element={<PrivateRoute><UserProfile/></PrivateRoute>}/>

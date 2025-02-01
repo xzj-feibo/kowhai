@@ -2,10 +2,10 @@
  * 布局
  */
 import {Avatar, Box, Divider, Drawer, List, ListItemIcon, ListItemText} from "@mui/material";
-import {AsideListItem} from "../../pages/VideoList/VideoList";
+import {AsideListItem} from "../pages/VideoList/VideoList";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import React, {useEffect, useState} from "react";
-import {getSubscriptions} from "../../api/user";
+import {getSubscriptions} from "../api/user";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import SubscriptionsOutlinedIcon from "@mui/icons-material/SubscriptionsOutlined";
 import HomeIcon from "@mui/icons-material/Home";
@@ -22,10 +22,10 @@ import VideoLibraryOutlinedIcon from "@mui/icons-material/VideoLibraryOutlined";
 import WorkHistoryOutlinedIcon from "@mui/icons-material/WorkHistoryOutlined";
 import {Outlet, useNavigate} from "react-router-dom";
 
-export default function Layout() {
+export default function SidebarLayout() {
     const navigate = useNavigate();
     //判断侧边栏选项选中
-    const [asideIsSelected, setAsideIsSelected] = useState(0)
+    const [asideIsSelected, setAsideIsSelected] = useState(-1)
     //侧边栏选项菜单
     const asideMenuItems = [
         { id: 0, text: '首页', defaultIcon: <HomeOutlinedIcon />, selectedIcon: <HomeIcon/> },
@@ -63,7 +63,6 @@ export default function Layout() {
             <Drawer
                 variant="permanent"
                 sx={{
-                    width: 240, // 侧边栏宽度
                     flexShrink: 0,
                     [`& .MuiDrawer-paper`]: {
                         width: 240,
@@ -72,13 +71,17 @@ export default function Layout() {
                         color: 'white'
                     },
                 }}
+                PaperProps={{
+                    sx: {
+                        top: '50px',
+                        width: 240,
+                        boxSizing: 'border-box',
+                        backgroundColor: 'black',
+                        color: 'white',
+                    }
+                }}
             >
                 <Box sx={{ padding: 2 }}>
-                    <Box sx={{display: 'inline-flex', alignItems: 'center'}}>
-                        <img src='/imgs/kowhai.png' style={{width: '50px', height: '40px', marginLeft: '8px'}}
-                             alt='无图片'/>&nbsp;&nbsp;
-                        <h2>Kowhai</h2>
-                    </Box>
                     <List sx={{ width: '200px' }}>
                         {asideMenuItems.map((item) => {
                             // 如果 item.id === 3，则先插入 Divider
