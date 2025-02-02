@@ -23,8 +23,6 @@ export default function VideoList() {
     const [topIsSelected, setTopIsSelected] = useState(0);
 
     const inputRef = useRef("");
-
-    const navigate = useNavigate();
     //获取全部视频
     const fetchVideos = async () => {
         return await getVideos(); // Fetch video data
@@ -72,10 +70,6 @@ export default function VideoList() {
                 console.error("Failed to fetch videos:", error);
             }
         }
-    }
-
-    function handleClickAvatar() {
-        navigate(`/user/${localStorage.getItem('userId')}`);
     }
 
     return (
