@@ -22,7 +22,7 @@ const VideoItem = ({ video }) => {
     const handlePlayClick = (e) => {
         e.stopPropagation();
         // 使用查询参数将视频链接传递给 VideoDetail 页面
-        navigate(`/video/detail/${id}?src=${encodeURIComponent(link)}`);
+        navigate(`/video/detail/${id}`, { state: { src: link, videoName: name, avatar: avatar, userName: user_name, videoId: id } });
     };
 
     useEffect(() => {

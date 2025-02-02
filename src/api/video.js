@@ -78,3 +78,16 @@ export const getVideosByLabel = async (label) => {
         }
     }
 }
+
+//查询视频点赞数
+export const getVideoLikes = async (videoId) => {
+    try {
+        const response = await axios.get(`${backAddress}/v1/video/like`, {params: {video_id: videoId}});
+        const data = response.data;
+        return [response.status, data.msg, data.data];
+    }catch (error) {
+        if (error.response.status !== 200){
+            return [error.response.status,error.response.data.err]
+        }
+    }
+}

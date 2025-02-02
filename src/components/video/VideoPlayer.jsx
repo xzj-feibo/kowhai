@@ -323,7 +323,7 @@ const VideoPlayer = ({ src, image }) => {
     }
 
     return (
-        <Box sx={{width: '1270px', margin: '80px 80px auto 150px'}}>
+        <Box sx={{width: '63%', height: '55%', margin: '80px 80px auto 150px'}}>
             <Paper
                 elevation={3}
                 sx={{
