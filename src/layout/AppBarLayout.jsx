@@ -1,8 +1,9 @@
 import React from "react";
-import { Avatar, Box, IconButton, InputBase, InputAdornment, AppBar, Toolbar, Typography } from "@mui/material";
+import {Avatar, Box, IconButton, InputBase, InputAdornment, AppBar, Toolbar, Typography, SvgIcon} from "@mui/material";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import {Outlet, useNavigate} from "react-router-dom";
 import MenuIcon from '@mui/icons-material/Menu';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 
 export default function AppBarLayout() {
     const navigate = useNavigate();
@@ -31,7 +32,7 @@ export default function AppBarLayout() {
                         </Typography>
                     </Box>
 
-                    <Box sx={{position:'relative', left:'70px', width: '85%', display: 'flex', justifyContent: 'center'}}>
+                    <Box sx={{position:'relative', left:'70px', width: '85%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                         {/* Search Bar */}
                         <Box sx={{
                             display: 'flex',
@@ -58,9 +59,12 @@ export default function AppBarLayout() {
                         {/* Avatar */}
                         <Avatar
                             src={localStorage.getItem('avatar')}
-                            sx={{ cursor: 'pointer', left:'33%' }}
+                            sx={{ cursor: 'pointer', left:'32%' }}
                             onClick={handleClickAvatar}
                         />
+                        <IconButton sx={{ cursor: 'pointer', left:'33%', color: 'white' }} onClick={()=>{navigate('/chat')}}>
+                            <WhatsAppIcon fontSize='large'/>
+                        </IconButton>
                     </Box>
                 </Toolbar>
             </AppBar>

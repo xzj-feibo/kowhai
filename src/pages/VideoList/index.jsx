@@ -5,14 +5,11 @@ import VideoItem from '../../components/video/VideoItem';
 import React, {useEffect, useRef, useState} from "react";
 import {getVideos, getVideosByLabel, searchByName} from "../../api/video";
 import {
-    Avatar,
     Box,
-    Divider, Grid,
-    InputBase,
+    Grid,
 } from "@mui/material";
 
 import {TopButton} from "./VideoList";
-import {useNavigate} from "react-router-dom";
 import AppBarLayout from "../../layout/AppBarLayout";
 
 

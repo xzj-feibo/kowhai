@@ -21,7 +21,7 @@ export const getCommentSum = async (videoId) => {
         debugger;
         const response = await axios.get(`${backAddress}/v1/comment/total`, {params:{video_id:videoId}});
         const data  =response.data;
-        return [response.status, data.msg, data.data.comments];
+        return [response.status, data.msg, data.data];
     }catch (error) {
         if (error.response.status !== 200){
             return [error.response.status,error.response.data.err]

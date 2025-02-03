@@ -40,16 +40,16 @@ export default function SidebarLayout() {
     const [subscriptions, setSubscriptions] = useState([])
 
 
+    //获取订阅数据
+    const fetchSubscriptions = async (userId) => {
+        return await getSubscriptions(userId);
+    }
+
     useEffect(()=>{
         fetchSubscriptions(localStorage.getItem("userId")).then((data) => {
             setSubscriptions(data[2]);
         })
     },[])
-
-    //获取订阅数据
-    const fetchSubscriptions = async (userId) => {
-        return await getSubscriptions(userId);
-    }
 
     //处理侧边栏选项被点击事件
     function handleListItemClick(id) {
