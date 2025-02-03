@@ -15,7 +15,7 @@ import AppBarLayout from "../../layout/AppBarLayout";
 import {getVideoLikes} from "../../api/video";
 import CommentInput from "../../components/comment/CommentInput";
 import CommentItem from "../../components/comment/CommentItem";
-import {getComments} from "../../api/comment";
+import {getComments, getCommentSum} from "../../api/comment";
 
 export default function VideoDetail() {
     const location = useLocation();
@@ -26,6 +26,7 @@ export default function VideoDetail() {
     const videoId = location.state?.videoId;
     const [likes, setLikes] = useState(0);
     const [comments, setComments] = useState([]);
+    const [commentSum, setCommentSum] = useState(0);
     //右侧按钮是否点击,-1-未点击，1-已点击
     const [rightButtons, setRightButtons] = useState([-1,-1,-1])
 
@@ -39,6 +40,11 @@ export default function VideoDetail() {
         return await getComments(videoId);
     }
 
+    //得到评论总数
+    const fetchGetCommentSum = async () => {
+        return await getCommentSum(videoId);
+    }
+
     useEffect(() => {
         fetchGetVideoLikes().then((data) => {
             setLikes(data[2]);
@@ -46,6 +52,10 @@ export default function VideoDetail() {
 
         fetchGetComments().then((data)=>{
             setComments(data[2]);
+        })
+
+        fetchGetCommentSum().then((data) => {
+            setCommentSum(data[2]);
         })
     }, []);
 
@@ -107,7 +117,7 @@ export default function VideoDetail() {
 
                 <Box sx={{ marginLeft: '7.5%', marginTop: '1%', width: '63%' }}>
                     <Typography variant="h6" sx={{ mb: 2 }}>
-                        1000条评论
+                        {commentSum}条评论
                     </Typography>
                     {/* 添加评论 */}
                     <CommentInput videoId={videoId} userName={userName}  callback={addCommentCallback}/>

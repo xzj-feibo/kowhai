@@ -1,6 +1,8 @@
-import {Avatar, Box, Stack, Typography} from "@mui/material";
+import {Avatar, Box, IconButton, Stack, Typography} from "@mui/material";
 import theme from "../../theme";
 import React from "react";
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
 
 export default function CommentItem({avatar, userName, content}) {
     return (
@@ -13,9 +15,17 @@ export default function CommentItem({avatar, userName, content}) {
                         <Typography variant='p'>@{userName}</Typography>
                         <Typography variant='p' sx={{color: theme.palette.primary.main}}>2024.04.21</Typography>
                     </Stack>
-                    <Typography variant='p' sx={{width: '1230px', overflow: 'hidden'}}>
-                        {content}
-                    </Typography>
+                    <Stack direction='row'>
+                        <Typography variant='p' sx={{width: '1100px', overflow: 'hidden'}}>
+                            {content}
+                        </Typography>
+                        <Box>
+                            <IconButton>
+                                <FavoriteBorderIcon sx={{color: 'white'}}/>
+                            </IconButton>
+                            <Typography variant='p'>100</Typography>
+                        </Box>
+                    </Stack>
                 </Stack>
             </Stack>
         </Box>
