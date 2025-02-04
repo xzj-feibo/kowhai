@@ -18,14 +18,15 @@ import {getSubscriptions} from "../../api/user";
 import ChatLeftItem from "../../components/chat/ChatLeftItem";
 import ChatRightItem from "../../components/chat/ChatRightItem";
 import ChatBarLayout from "../../layout/ChatBarLayout";
+import {connectWebSocket, disconnectWebSocket, getHistoryMessages, onMessage, sendMessage} from "../../api/chat";
 
 export default function Chat() {
     //已经订阅的好友
     const [subScribedFriends, setSubScribedFriends] = useState([]);
     //当前聊天的好友信息
-    const [currentChattingFriend, setCurrentChattingFriend] = useState(null);
+    const [currentChattingFriend, setCurrentChattingFriend] = useState({avatar:"", user_name:""});
     //与当前好友的聊天数据
-    const [chatData, setChatData] = useState([]);
+    const [messages, setMessages] = useState([]);
     //当前写的消息
     const [text, setText] = useState("");
     //打开Emoji输入
@@ -36,12 +37,48 @@ export default function Chat() {
         return await getSubscriptions(userId);
     }
 
+    //获取历史消息
+    const fetchHistoryMessages = async (senderId, receiverId) => {
+        return await getHistoryMessages(senderId, receiverId);
+    }
     useEffect(()=>{
         fetchSubscriptions(localStorage.getItem("userId")).then((data) => {
             setSubScribedFriends(data[2]);
         });
 
+        fetchHistoryMessages(localStorage.getItem('userId'), currentChattingFriend.id+'').then((data)=>{
+            setMessages(data);
+        })
+        // 连接 WebSocket
+        connectWebSocket('ws://localhost:8082/ws', {user_id:localStorage.getItem('userId')});
+
+        // 注册接收消息的回调
+        onMessage((message) => {
+            setMessages((prevMessages) => [...prevMessages, message]);
+        });
+        return () => disconnectWebSocket();
     },[currentChattingFriend])
+
+    //发送消息
+    const handleSendMessage = () => {
+        if (text.trim()){
+            const currentMessage = {
+                sender_id: Number(localStorage.getItem('userId')),
+                receiver_id: currentChattingFriend.id,
+                content: text
+            }
+            //加上时间
+            const curMessage = {
+                sender_id: Number(localStorage.getItem('userId')),
+                receiver_id: currentChattingFriend.id,
+                content: text,
+                created_at: new Date().toISOString()
+            }
+            sendMessage(currentMessage);
+            setMessages((previewMessages) => [...(previewMessages || []), curMessage])
+            setText('');
+        }
+    };
 
     //切换聊天好友
     function toggleFriend(index) {
@@ -59,7 +96,7 @@ export default function Chat() {
 
     return (
         <Box>
-            <ChatBarLayout/>
+            <ChatBarLayout currentFriendName={currentChattingFriend.user_name}/>
             {/*侧边栏*/}
             <Drawer variant="permanent" sx={{
                 flexShrink: 0,
@@ -98,16 +135,11 @@ export default function Chat() {
                 {/* 聊天界面 */}
                 <Box sx={{ flexGrow: 1, overflowY: 'auto', padding: '10px',height: '50px', width:'100%' }}>
                     {/*聊天项*/}
-                    <ChatLeftItem/>
-                    <ChatRightItem/>
-                    <ChatLeftItem/>
-                    <ChatRightItem/>
-                    <ChatLeftItem/>
-                    <ChatRightItem/>
-                    <ChatLeftItem/>
-                    <ChatRightItem/>
-                    <ChatLeftItem/>
-                    <ChatRightItem/>
+                    {messages && messages.map((message) => (
+                        message.sender_id === Number(localStorage.getItem('userId'))
+                            ? <ChatRightItem avatar={localStorage.getItem('avatar')} message={message.content} time={message.created_at}/>
+                            : <ChatLeftItem avatar={currentChattingFriend.avatar} message={message.content} time={message.created_at}/>
+                    ))}
                 </Box>
 
                 {/* 输入框 */}
@@ -139,9 +171,15 @@ export default function Chat() {
                             placeholder="输入..."
                             value={text}
                             onChange={(e) => setText(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' && !e.shiftKey) { // 只在没有按 Shift 的情况下发送消息
+                                    e.preventDefault(); // 防止默认行为（换行）
+                                    handleSendMessage();
+                                }
+                            }}
                             endAdornment={
                                 <InputAdornment position="end">
-                                    <IconButton>
+                                    <IconButton onClick={handleSendMessage}>
                                         <SendIcon sx={{ color: theme.palette.primary.main }} />
                                     </IconButton>
                                 </InputAdornment>
