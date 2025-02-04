@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {Avatar, Box, IconButton, InputBase, InputAdornment, AppBar, Toolbar, Typography, SvgIcon} from "@mui/material";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import {Outlet, useNavigate} from "react-router-dom";
@@ -7,9 +7,20 @@ import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 
 export default function AppBarLayout() {
     const navigate = useNavigate();
+    const [keyword, setKeyword] = useState("");
     const handleClickAvatar = () => {
-        navigate(`/user/${localStorage.getItem('userId')}`);
+        navigate(`/user/${localStorage.getItem('userId')}`,{
+            state: {
+                username: localStorage.getItem('username'),
+                avatar: localStorage.getItem('avatar')
+            }
+        });
     };
+
+    //处理搜索
+    function handleSearch() {
+        navigate('/search?keyword='+keyword)
+    }
 
     return (
         <Box>
@@ -46,9 +57,17 @@ export default function AppBarLayout() {
                             <InputBase
                                 sx={{ color: 'white', width: '100%' }}
                                 placeholder="搜索"
+                                value={keyword}
+                                onChange={(e) => setKeyword(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' && !e.shiftKey) { // 只在没有按 Shift 的情况下发送消息
+                                        e.preventDefault(); // 防止默认行为（换行）
+                                        handleSearch();
+                                    }
+                                }}
                                 endAdornment={
                                     <InputAdornment position="end">
-                                        <IconButton>
+                                        <IconButton onClick={handleSearch}>
                                             <SearchOutlinedIcon sx={{ color: 'white' }} />
                                         </IconButton>
                                     </InputAdornment>

@@ -75,7 +75,9 @@ export default function Chat() {
                 created_at: new Date().toISOString()
             }
             sendMessage(currentMessage);
-            setMessages((previewMessages) => [...(previewMessages || []), curMessage])
+            fetchHistoryMessages(localStorage.getItem('userId'), currentChattingFriend.id+'').then((data)=>{
+                setMessages(data);
+            })
             setText('');
         }
     };
@@ -139,6 +141,7 @@ export default function Chat() {
                 {/* 聊天界面 */}
                 <Box
                     sx={{
+                        borderRadius:'30px',
                         flexGrow: 1,
                         overflowY: 'auto',
                         padding: '10px',

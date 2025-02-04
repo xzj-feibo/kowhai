@@ -26,7 +26,7 @@ export default function ChatLeftItem({avatar, message, time}) {
             <Box
                 sx={{
                     maxWidth: '55%',
-                    backgroundColor: theme.palette.primary.light,
+                    backgroundColor: 'white',
                     color: '#000',
                     padding: '8px 12px',
                     borderRadius: '15px',

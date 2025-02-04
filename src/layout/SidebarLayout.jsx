@@ -58,6 +58,17 @@ export default function SidebarLayout() {
             navigate('/')
         }
     }
+
+    //前往订阅用户页面
+    function goToSubscribe(userId,username,avatar) {
+        navigate(`/user/${userId}`,{
+            state:{
+                username: username,
+                avatar:avatar
+            }
+        })
+    }
+
     return (
         <Box sx={{width: '100vw', height: '100vh'}}>
             <Drawer
@@ -137,7 +148,7 @@ export default function SidebarLayout() {
                             </ListItemIcon>
                         </AsideListItem>
                         {subscriptions && subscriptions.map((item) => (
-                            <AsideListItem button>
+                            <AsideListItem button onClick={()=>goToSubscribe(item.id, item.user_name, item.avatar)}>
                                 <Box sx={{marginRight: '7px', display: 'flex', alignItems: 'center'}}>
                                     <Avatar src={item.avatar} sx={{width: '20px', height: '20px'}}/>
                                     <Box sx={{marginLeft: '7px'}}>{item.user_name}</Box>
