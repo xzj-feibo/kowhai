@@ -385,15 +385,21 @@ const VideoPlayer = ({ src, image }) => {
                                         background: 'black', border: '1px solid #ccc', zIndex: 100}}/>
 
                             <PlayingBox>
-                                <IconButton onClick={togglePlayPause} sx={{color: 'white'}}>
-                                    {isPlaying ? <PauseIcon/> : <PlayArrowIcon/>}
+                                <IconButton onClick={togglePlayPause} sx={{color: 'white',transition: 'transform 0.2s ease',
+                                    '&:hover': {
+                                        transform: 'scale(1.2)',
+                                    }}}>
+                                    {isPlaying ? <PauseIcon fontSize='large'/> : <PlayArrowIcon fontSize='large'/>}
                                 </IconButton>
 
                                 <VolumeBox sliderWidth={sliderWidth}
                                            onMouseEnter={handleMouseEnterVolume}
                                            onMouseLeave={handleMouseLeaveVolume}>
-                                    <IconButton onClick={toggleMute} sx={{color: 'white'}}>
-                                        {isMuted ? <VolumeOff/> : <VolumeUp/>}
+                                    <IconButton onClick={toggleMute} sx={{color: 'white',transition: 'transform 0.2s ease',
+                                        '&:hover': {
+                                            transform: 'scale(1.2)',
+                                        }}}>
+                                        {isMuted ? <VolumeOff fontSize='large'/> : <VolumeUp fontSize='large'/>}
                                     </IconButton>
                                     {showVolumeSlider && (
                                         <VolumeSlider
@@ -410,8 +416,8 @@ const VideoPlayer = ({ src, image }) => {
                             {/* 显示时间 */}
                             <Box sx={{
                                 position: 'absolute',
-                                bottom: '23px',
-                                right: '150px',
+                                bottom: '26px',
+                                right: '175px',
                                 color: 'white',
                                 fontSize: '14px',
                                 zIndex: 4
@@ -426,36 +432,47 @@ const VideoPlayer = ({ src, image }) => {
                                  }}>
                                 <List ref={speedSelectBoxRef} component="nav" aria-label="secondary mailbox folder" sx={{
                                     position: 'absolute',
-                                    bottom: '45px',
-                                    right: '88px',
-                                    width: '70px', // 设置宽度
+                                    bottom: '50px',
+                                    right: '120px',
+                                    width: '50px', // 设置宽度
                                     backgroundColor: '#333', // 浅黑色背景
                                     color: 'white', // 文字颜色（避免与背景混淆）
+                                    borderRadius:'5px',
                                     zIndex: 4,
-                                    display: 'none'
                                 }}>
                                     {speedList.map((item, index) => (
                                         <ListItemButton
                                             selected={speed === speedList[index]}
                                             onClick={(event) => handleSpeedListItemClick(event, index)}
                                             sx={{
+                                                padding: '1px 1px', // 控制内边距，减小高度
+                                                minHeight: '10px',  // 控制最小高度
+                                                justifyContent: 'center', // 水平居中
                                                 '&.Mui-selected': {
-                                                    backgroundColor: '#444', // 选中时背景色
+                                                    backgroundColor: '#444',
                                                     color: theme.palette.primary.main,
                                                 },
                                                 '&:hover': {
-                                                    backgroundColor: '#555', // 悬停时背景色
+                                                    backgroundColor: '#555',
                                                     color: theme.palette.primary.main,
                                                 }
                                             }}
                                         >
-                                            <ListItemText primary={<>{item}x</>} />
+                                            <ListItemText
+                                                primary={<>{item}x</>}
+                                                sx={{
+                                                    textAlign: 'center',
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center'
+                                                }}
+                                            />
                                         </ListItemButton>
                                     ))}
                                 </List>
                                 <Box ref={speedTextRef} sx={{position: 'absolute',
-                                    bottom: '22px',
-                                    right: '105px',
+                                    bottom: '25px',
+                                    right: '130px',
                                     color: 'white',
                                     zIndex: 4}}
                                     onMouseEnter={()=>{
@@ -470,14 +487,21 @@ const VideoPlayer = ({ src, image }) => {
                             </Box>
 
                             <FullScreenBox>
-                                <IconButton onClick={toggleFullscreen} sx={{color: 'white'}}>
-                                    {document.fullscreenElement ? <FullscreenExitIcon/> : <FullscreenIcon/>}
+                                <IconButton onClick={toggleFullscreen} sx={{color: 'white',
+                                    transition: 'transform 0.2s ease',
+                                    '&:hover': {
+                                        transform: 'scale(1.2)',
+                                    }}}>
+                                    {document.fullscreenElement ? <FullscreenExitIcon fontSize='large'/> : <FullscreenIcon fontSize='large'/>}
                                 </IconButton>
                             </FullScreenBox>
 
                             <PIPBox>
-                                <IconButton onClick={toggleMiniMode} sx={{color: 'white'}}>
-                                    <PictureInPictureAlt/>
+                                <IconButton onClick={toggleMiniMode} sx={{color: 'white',transition: 'transform 0.2s ease',
+                                    '&:hover': {
+                                        transform: 'scale(1.2)',
+                                    }}}>
+                                    <PictureInPictureAlt fontSize='large'/>
                                 </IconButton>
                             </PIPBox>
                         </>
