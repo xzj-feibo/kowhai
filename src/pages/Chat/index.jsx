@@ -75,7 +75,9 @@ export default function Chat() {
                 created_at: new Date().toISOString()
             }
             sendMessage(currentMessage);
-            setMessages((previewMessages) => [...(previewMessages || []), curMessage])
+            fetchHistoryMessages(localStorage.getItem('userId'), currentChattingFriend.id+'').then((data)=>{
+                setMessages(data);
+            })
             setText('');
         }
     };

@@ -26,7 +26,7 @@ export default function Search() {
             }));
             setSearchedVideos(videos); // Update video data
         })
-    }, []);
+    }, [keyword]);
     return (
         <Box sx={{marginTop: '4%'}}>
             <AppBarLayout/>
