@@ -35,7 +35,7 @@ export default function ChatBarLayout({currentFriendName}) {
                     {/* Use flexGrow to push content to the right */}
                     {/* Center Content */}
                     <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <Typography variant="subtitle1" color="white">
+                        <Typography variant="h5" color="white">
                             {currentFriendName}
                         </Typography>
                     </Box>

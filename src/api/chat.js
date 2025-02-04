@@ -56,6 +56,7 @@ export const disconnectWebSocket = () => {
 };
 
 const backAddress = process.env.REACT_APP_LOCAL_BACK_ADDRESS
+
 //查询历史消息
 export const getHistoryMessages = async (senderId, receiverId) => {
     try {
@@ -66,4 +67,48 @@ export const getHistoryMessages = async (senderId, receiverId) => {
             return [error.response.status,error.response.data.err]
         }
     }
+}
+
+
+//格式化时间
+ export function formatDateTime(dateTimeString) {
+    const date = new Date(dateTimeString);
+
+    // 获取当前日期的年月日 (使用UTC)
+    const today = new Date();
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(date.getUTCDate()).padStart(2, '0');
+
+    // 获取当前年份和日期，判断是否是今天
+    const todayYear = today.getUTCFullYear();
+    const todayMonth = today.getUTCMonth();
+    const todayDay = today.getUTCDate();
+
+    // 获取时间部分 (使用UTC)
+    let hours = date.getUTCHours();
+    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+    const seconds = String(date.getUTCSeconds()).padStart(2, '0');
+
+    // AM/PM 转换
+    const period = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12 || 12;
+
+    // 判断是否是今天
+    const isToday = date.getUTCDate() === todayDay && date.getUTCMonth() === todayMonth && date.getUTCFullYear() === todayYear;
+
+    // 返回格式化的日期时间
+    let formattedDateTime = `${hours}:${minutes} ${period}`;
+
+    // 如果不是今天，则加上日期
+    if (!isToday) {
+        formattedDateTime = `${month}-${day} ${formattedDateTime}`;
+    }
+
+    // 如果不是今年，则加上年份
+    if (year !== todayYear) {
+        formattedDateTime = `${year} ${formattedDateTime}`;
+    }
+
+    return formattedDateTime;
 }

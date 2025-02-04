@@ -84,15 +84,19 @@ export default function Chat() {
     function toggleFriend(index) {
         setCurrentChattingFriend(subScribedFriends[index])
     }
+
     //切换打开Emoji
     function toggleEmoji() {
         const emojiElement = emojiRef.current;
-        if (emojiElement.style.display === 'none'){
+
+        // 确保初始状态是'none'
+        if (emojiElement.style.display === '' || emojiElement.style.display === 'none') {
             emojiElement.style.display = 'block';
-        }else{
+        } else {
             emojiElement.style.display = 'none';
         }
     }
+
 
     return (
         <Box>
@@ -131,10 +135,23 @@ export default function Chat() {
                 </Box>
             </Drawer>
 
-            <Box sx={{ width: '85%', marginLeft:'15%',marginTop:'80px', height: '100vh', backgroundColor: 'black', display: 'flex', flexDirection: 'column' }}>
+            <Box sx={{ width: '85%', marginLeft:'15%',marginTop:'60px', height: '100vh', backgroundColor: 'black', display: 'flex', flexDirection: 'column' }}>
                 {/* 聊天界面 */}
-                <Box sx={{ flexGrow: 1, overflowY: 'auto', padding: '10px',height: '50px', width:'100%' }}>
-                    {/*聊天项*/}
+                <Box
+                    sx={{
+                        flexGrow: 1,
+                        overflowY: 'auto',
+                        padding: '10px',
+                        height: '50px',
+                        width: '100%',
+                        backgroundImage: `url('/imgs/background.jpg')`,
+                        backgroundSize: 'cover',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundAttachment: 'fixed', // 保持背景图不随内容滚动
+                        backgroundPosition: 'center',
+                    }}
+                >
+                {/*聊天项*/}
                     {messages && messages.map((message) => (
                         message.sender_id === Number(localStorage.getItem('userId'))
                             ? <ChatRightItem avatar={localStorage.getItem('avatar')} message={message.content} time={message.created_at}/>
@@ -143,56 +160,58 @@ export default function Chat() {
                 </Box>
 
                 {/* 输入框 */}
-                <Box
-                    sx={{
-                        position: 'fixed',
-                        bottom: '0',
-                        width: '85%',
-                        height: '70px',
-                        backgroundColor: 'black',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    }}
-                >
+                {currentChattingFriend.user_name !== "" &&
                     <Box
                         sx={{
+                            position: 'fixed',
+                            bottom: '0',
+                            width: '85%',
+                            height: '70px',
+                            backgroundColor: 'transparent',
                             display: 'flex',
+                            justifyContent: 'center',
                             alignItems: 'center',
-                            border: '1px solid white',
-                            borderRadius: '60px',
-                            paddingLeft: '15px',
-                            width: '60%',
-                            height: '50%',
                         }}
                     >
-                        <InputBase
-                            sx={{ color: 'white', width: '100%' }}
-                            placeholder="输入..."
-                            value={text}
-                            onChange={(e) => setText(e.target.value)}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter' && !e.shiftKey) { // 只在没有按 Shift 的情况下发送消息
-                                    e.preventDefault(); // 防止默认行为（换行）
-                                    handleSendMessage();
-                                }
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                border: '1px solid white',
+                                borderRadius: '60px',
+                                paddingLeft: '15px',
+                                width: '60%',
+                                height: '50%',
                             }}
-                            endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton onClick={handleSendMessage}>
-                                        <SendIcon sx={{ color: theme.palette.primary.main }} />
-                                    </IconButton>
-                                </InputAdornment>
-                            }
-                        />
+                        >
+                            <InputBase
+                                sx={{ color: 'white', width: '100%' }}
+                                placeholder="输入..."
+                                value={text}
+                                onChange={(e) => setText(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' && !e.shiftKey) { // 只在没有按 Shift 的情况下发送消息
+                                        e.preventDefault(); // 防止默认行为（换行）
+                                        handleSendMessage();
+                                    }
+                                }}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton onClick={handleSendMessage}>
+                                            <SendIcon sx={{ color: theme.palette.primary.main }} />
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                            />
+                        </Box>
+                        <IconButton onClick={toggleEmoji}>
+                            <InsertEmoticonIcon sx={{color:'white'}} fontSize='large'/>
+                        </IconButton>
+                        <Box sx={{display:'none',position:'relative', width: '150px', height: '50px',zIndex:2,bottom: '400px'}} ref={emojiRef}>
+                            <EmojiPicker theme='dark' lazyLoadEmojis onEmojiClick={(emojiObject) => setText(text + emojiObject.emoji)}/>
+                        </Box>
                     </Box>
-                    <IconButton onClick={toggleEmoji}>
-                        <InsertEmoticonIcon sx={{color:'white'}} fontSize='large'/>
-                    </IconButton>
-                    <Box sx={{display:'none',position:'relative', width: '150px', height: '50px',zIndex:2,bottom: '400px'}} ref={emojiRef}>
-                        <EmojiPicker theme='dark' lazyLoadEmojis onEmojiClick={(emojiObject) => setText(text + emojiObject.emoji)}/>
-                    </Box>
-                </Box>
+                }
             </Box>
         </Box>
     )
