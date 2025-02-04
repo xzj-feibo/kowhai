@@ -89,7 +89,7 @@ export const VolumeSlider = styled(Slider)({
 export const FullScreenBox = styled(Box)({
     position: 'absolute',
     bottom: '15px',
-    right: '60px',
+    right: '70px',
     zIndex: 4
 })
 
