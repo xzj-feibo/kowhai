@@ -91,3 +91,16 @@ export const getVideoLikes = async (videoId) => {
         }
     }
 }
+
+//搜索视频
+export const searchVideos = async (keyword) => {
+    try {
+        const response = await axios.get(`${backAddress}/v1/video/search`, {params:{name: keyword}});
+        const data = response.data;
+        return [response.status, data.msg, data.data];
+    }catch (error) {
+        if (error.response.status !== 200){
+            return [error.response.status,error.response.data.err]
+        }
+    }
+}

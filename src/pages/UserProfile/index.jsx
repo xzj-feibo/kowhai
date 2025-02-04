@@ -14,24 +14,26 @@ import EditIcon from "@mui/icons-material/Edit";
 import ImageIcon from "@mui/icons-material/Image";
 import PollIcon from "@mui/icons-material/Poll";
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
-import { useNavigate } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import AppBarLayout from "../../layout/AppBarLayout";
 
 const ProfilePage = () => {
     const [tabIndex, setTabIndex] = useState(0);
     const navigate = useNavigate(); //获取路由跳转函数
-
+    const location = useLocation();
+    const avatar = location.state?.avatar;
+    const username = location.state?.username;
     return (
         <Box sx={{ color: "#fff", minHeight: "100vh", p: 3, display: "flex", justifyContent: "center" }}>
             <AppBarLayout/>
             <Box sx={{ width: "45%", marginTop: '4%' }}>
                 {/* 用户信息 */}
                 <Box display="flex" alignItems="center" gap={2}>
-                    <Avatar sx={{ width: 150, height: 150, bgcolor: "#4caf50" }} src={localStorage.getItem("avatar")} />
+                    <Avatar sx={{ width: 150, height: 150, bgcolor: "#4caf50" }} src={avatar} />
                     <Box>
-                        <Typography variant="h4">{localStorage.getItem("username")}</Typography>
+                        <Typography variant="h4">{username}</Typography>
                         <Typography variant="subtitle1" sx={{ color: "#aaa" }}>
-                            @{localStorage.getItem("username")}
+                            @{username}
                         </Typography>
                     </Box>
                 </Box>

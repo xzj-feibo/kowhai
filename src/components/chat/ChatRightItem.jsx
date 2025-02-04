@@ -19,7 +19,7 @@ export default function ChatRightItem({avatar, message, time}) {
             <Box
                 sx={{
                     maxWidth: '55%',
-                    backgroundColor: theme.palette.secondary.light,
+                    backgroundColor: theme.palette.primary.main,
                     color: '#000',
                     padding: '8px 12px',
                     borderRadius: '15px',

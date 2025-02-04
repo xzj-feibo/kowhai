@@ -13,6 +13,7 @@ import VideoUpload from "../components/video/VideoUpload";
 import VideoTagComment from "../components/video/VideoTagComment";
 import SidebarLayout from "../layout/SidebarLayout";
 import Chat from "../pages/Chat";
+import Search from "../pages/Search";
 
 export default function AppRouter(){
     //鉴权逻辑
@@ -36,6 +37,7 @@ export default function AppRouter(){
                     <Route path="/comment" element={<VideoTagComment><VideoList/></VideoTagComment>}/>
                     <Route path="/user/:userId" element={<PrivateRoute><UserProfile/></PrivateRoute>}/>
                     <Route path="/video/upload" element={<PrivateRoute><VideoUpload/></PrivateRoute>}/>
+                    <Route path="/search" element={<PrivateRoute><Search/></PrivateRoute>}/>
                 </Route>
                 <Route path="/chat" element={<PrivateRoute><Chat/></PrivateRoute>}/>
                 <Route path="/video/detail/:videoId" element={<PrivateRoute><VideoDetail/></PrivateRoute>}/>
