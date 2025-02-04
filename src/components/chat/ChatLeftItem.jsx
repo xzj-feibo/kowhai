@@ -2,7 +2,40 @@ import {Avatar, Box, Typography} from "@mui/material";
 import React from "react";
 import theme from "../../theme";
 
-export default function ChatLeftItem() {
+export default function ChatLeftItem({avatar, message, time}) {
+    function formatTime(isoTime) {
+        // 截取时间字符串，确保 Date 对象能正确解析
+        const fixedIsoTime = isoTime.replace(/\.\d+Z$/, match => match.slice(0, 4) + 'Z');
+        const date = new Date(fixedIsoTime);
+        const now = new Date();
+
+        if (isNaN(date.getTime())) {
+            throw new Error("Invalid Date Format");
+        }
+
+        const isToday = date.toDateString() === now.toDateString();
+
+        let hours = date.getHours();
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const period = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12;
+
+        if (isToday) {
+            return `${hours}:${minutes} ${period}`;
+        } else {
+            const day = date.getDate();
+            const month = date.toLocaleString('default', { month: 'short' });
+            return `${hours}:${minutes} ${period} ${day}, ${month}`;
+        }
+    }
+
+    const time1 = "2025-02-03T23:19:56.12278Z";
+    console.log(formatTime(time1));
+
+    const time2 = "2025-01-01T09:15:20.000Z";
+    console.log(formatTime(time2));
+
+
     return (
         <Box
             sx={{
@@ -17,7 +50,7 @@ export default function ChatLeftItem() {
             <Box sx={{ marginRight: '1%'}}>
                 <Avatar sx={{position: 'absolute',
                     top: 0,
-                    left: '-40px',}} src={localStorage.getItem('avatar')}
+                    left: '-40px',}} src={avatar}
                 />
             </Box>
 
@@ -34,10 +67,10 @@ export default function ChatLeftItem() {
                 }}
             >
                 <Typography variant="body1">
-                    This is a very long sample message to test the avatar positioning in the left-top corner of the message box. We need to ensure that the content can wrap gracefully without breaking the layout or misplacing the avatar.
+                    {message}
                 </Typography>
                 <Typography variant="caption" sx={{ display: 'block', textAlign: 'right', fontSize: '10px', marginTop: '4px' }}>
-                    10:45 AM
+                    {formatTime(time)}
                 </Typography>
             </Box>
         </Box>
