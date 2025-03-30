@@ -8,7 +8,7 @@ import {
     MenuItem,
     Paper,
     Select,
-    TextField, Typography,
+    TextField
 } from "@mui/material";
 import { uploadVideo } from "../../api/video";
 import NoticeBar from "../util/NoticeBar";
@@ -47,8 +47,7 @@ export default function VideoUpload() {
         if (videoName === "") {
             setVideoName(videoFile.name);
         }
-        setSnackbarMessage("视频上传中...");
-        setSnackbarSeverity("info");
+
         setOpenSnackbar(true);
         setAutoHideDuration(null);
         setHandleCloseSnackbar(() => {});
@@ -59,15 +58,25 @@ export default function VideoUpload() {
             videoFile,
             label
         );
-        setHandleCloseSnackbar(() => setOpenSnackbar(false));
-        if (data[0] === 200) {
-            setSnackbarMessage(data[1]);
-            setSnackbarSeverity("success");
-        } else {
-            setSnackbarMessage(data[1]);
-            setSnackbarSeverity("error");
-            setOpenSnackbar(true);
-        }
+        setSnackbarMessage(data[1]);
+        setSnackbarSeverity("info");
+        // 2秒后关闭 Snackbar
+        setTimeout(() => {
+            setHandleCloseSnackbar(() => setOpenSnackbar(false));
+            // ✅ 清除用户输入的内容
+            setVideoName("");
+            setImgFile(null);
+            setVideoFile(null);
+            setLabel(null);
+
+            // ✅ 重置 FileUploadBox 组件的内容
+            if (videoRef.current) {
+                videoRef.current.reset(); // 在 FileUploadBox 组件中实现 reset 方法
+            }
+            if (imgRef.current) {
+                imgRef.current.reset();
+            }
+        }, 2000);
     };
 
     //选择视频类型回调

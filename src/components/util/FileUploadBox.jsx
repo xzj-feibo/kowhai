@@ -1,10 +1,21 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, forwardRef, useImperativeHandle } from "react";
 import { Box, Typography } from "@mui/material";
 
-export default function FileUploadBox({ handleFile, type, name }) {
+const FileUploadBox = forwardRef(({ handleFile, type, name }, ref) => {
     const [fileUrl, setFileUrl] = useState(null);
     const [fileInfo, setFileInfo] = useState({ name: "", size: "" });
     const inputRef = useRef(null);
+
+    // 让父组件可以调用 reset() 方法
+    useImperativeHandle(ref, () => ({
+        reset() {
+            setFileUrl(null);  // 清除预览
+            setFileInfo({ name: "", size: "" });  // 清除文件信息
+            if (inputRef.current) {
+                inputRef.current.value = "";  // 清空 input 选择框的值
+            }
+        }
+    }));
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -94,4 +105,6 @@ export default function FileUploadBox({ handleFile, type, name }) {
             )}
         </Box>
     );
-}
+});
+
+export default FileUploadBox;
